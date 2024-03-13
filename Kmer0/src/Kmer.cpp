@@ -36,10 +36,10 @@ Kmer::Kmer(const string& text){
     }
 }
 int Kmer::getK() const{
-    return this->toString().size();
+    return size();
 }
 int Kmer::size() const{
-    return this->toString().size();
+    return this->_text.size();
 }
 string Kmer::toString() const{
     return this->_text;
@@ -47,8 +47,7 @@ string Kmer::toString() const{
 
 const char& Kmer::at(int index) const{
     if(index >= 0 && index <= this->getK()-1){
-        const char& c = this->toString().at(index);
-        return c;
+        return this -> _text.at(index);
     }
     else{
         throw out_of_range("El índice buscado debe estar entre 0 y la longitud del string");
@@ -56,8 +55,7 @@ const char& Kmer::at(int index) const{
 }
 char& Kmer::at(int index){
     if(index >= 0 && index <= this->getK()-1){
-        char& c = this->toString().at(index);
-        return c;
+        return this -> _text.at(index);
     }
     else{
         throw out_of_range("El índice buscado debe estar entre 0 y la longitud del string");
@@ -66,6 +64,8 @@ char& Kmer::at(int index){
 void Kmer::normalize(const std::string& validNucleotides){
     //Poner todos los caracteres en mayúscula
     ToUpper(*this);
+    toString()="null";
+    cout << _text;
     //Sustituir por _
     bool pertenece0;
     char c;
@@ -74,7 +74,7 @@ void Kmer::normalize(const std::string& validNucleotides){
         pertenece0 = IsValidNucleotide(c, validNucleotides);
         //Si el carácter no pertenece a validNucleotides:
         if(!pertenece0){
-            _text[i] = MISSING_NUCLEOTIDE;
+            this->_text.at(i) = MISSING_NUCLEOTIDE;
         }
     }
 }
@@ -88,7 +88,7 @@ Kmer Kmer::complementary(const std::string& nucleotides,
     else{
         for(int i = 0; i<this->getK(); i++){
             for(int j = 0; j<complementaryNucleotides.size();j++){
-                if(nucleotides[j] == this->at(i)){
+                if(nucleotides[j] == at(i)){
                     complementarykmer._text += complementaryNucleotides[j];
                 }
             }
@@ -107,30 +107,17 @@ bool IsValidNucleotide(char nucleotide, const string& validNucleotides){
     return pertenece;
 }
 void ToUpper(Kmer& kmer){
-    for(int i=0; i< kmer.toString().size(); i++){
-        //La diferencia entre una letra y su mayúscula en ASCII es 32
-        if(kmer.at(i) >= 'a' && kmer.at(i) <= 'z'){
-            kmer.set(i, kmer.at(i) -32);
-        }
-        else{
-            kmer.set(i, kmer.at(i));
-        }
+    
+    for(int i = 0; i<kmer.size(); i++){
+        char v = toupper(kmer.at(i));
+        kmer.at(i)=v;
     }
+    
 }
 
 void ToLower(Kmer& kmer){
-    for(int i=0; i< kmer.toString().size(); i++){
-        //La diferencia entre una letra y su mayúscula en ASCII es 32
-        if(kmer.at(i) >= 'A' && kmer.at(i) <= 'Z'){
-            kmer.set(i, kmer.at(i) +32);
-        }
-        else{
-            kmer.set(i, kmer.at(i));
-        }
+     for(int i = 0; i<kmer.size(); i++){
+        char v = tolower(kmer.at(i));
+        kmer.at(i)=v;
     }
-}
-
-/*Método añadido por necesidad*/
-void Kmer::set(int index, char caracter){
-    this->_text[index] = caracter;
 }

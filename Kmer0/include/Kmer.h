@@ -127,9 +127,6 @@ public:
     Kmer complementary(const std::string& nucleotides, 
          const std::string& complementaryNucleotides) const;
     
-    /*Método añadido por necesidad*/
-    void set(int index, char caracter);
-    
 private:
     /**
      * A string with a list of characters representing the nucleotides in 

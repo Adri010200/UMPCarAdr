@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
     Kmer kmer("ACGTacgtAs");
     kmer.normalize(VALID_NUCLEOTIDES);
     Kmer complementary = kmer.complementary(VALID_NUCLEOTIDES,COMPLEMENTARY_NUCLEOTIDES);
-    cout<<complementary.toString();
+    cout<<complementary.toString()<<endl<<kmer.toString();
     return 0;
 }
 
