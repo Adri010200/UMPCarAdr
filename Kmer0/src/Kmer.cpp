@@ -64,8 +64,6 @@ char& Kmer::at(int index){
 void Kmer::normalize(const std::string& validNucleotides){
     //Poner todos los caracteres en mayúscula
     ToUpper(*this);
-    toString()="null";
-    cout << _text;
     //Sustituir por _
     bool pertenece0;
     char c;
