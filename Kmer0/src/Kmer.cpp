@@ -5,12 +5,9 @@
 
 /** 
  * @file Kmer.cpp
- * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
- * @author Andrés Cano Utrera <acu@decsai.ugr.es>
- * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
- * @author Javier Martínez Baena <jbaena@ugr.es>
+ * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
+ * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
  * 
- * Created on 24 October 2023, 14:00
  */
 
 #include "Kmer.h"
@@ -27,6 +24,7 @@ Kmer::Kmer(int k){
             }
         }
     }
+
 Kmer::Kmer(const string& text){
     if(text.size() == 0){
         throw invalid_argument("El texto pasado no debe estar vacío");
@@ -35,12 +33,15 @@ Kmer::Kmer(const string& text){
         this->_text = text;
     }
 }
+
 int Kmer::getK() const{
     return size();
 }
+
 int Kmer::size() const{
     return this->_text.size();
 }
+
 string Kmer::toString() const{
     return this->_text;
 }
@@ -53,6 +54,7 @@ const char& Kmer::at(int index) const{
         throw out_of_range("El índice buscado debe estar entre 0 y la longitud del string");
     }
 }
+
 char& Kmer::at(int index){
     if(index >= 0 && index <= this->getK()-1){
         return this -> _text.at(index);
@@ -61,6 +63,7 @@ char& Kmer::at(int index){
         throw out_of_range("El índice buscado debe estar entre 0 y la longitud del string");
     }
 }
+
 void Kmer::normalize(const std::string& validNucleotides){
     //Poner todos los caracteres en mayúscula
     ToUpper(*this);
@@ -76,6 +79,7 @@ void Kmer::normalize(const std::string& validNucleotides){
         }
     }
 }
+
 Kmer Kmer::complementary(const std::string& nucleotides, 
          const std::string& complementaryNucleotides) const{
     Kmer complementarykmer;
@@ -94,6 +98,7 @@ Kmer Kmer::complementary(const std::string& nucleotides,
     }
     return complementarykmer;
 }
+
 bool IsValidNucleotide(char nucleotide, const string& validNucleotides){
     bool pertenece=false;
     int s = validNucleotides.size();
@@ -104,6 +109,7 @@ bool IsValidNucleotide(char nucleotide, const string& validNucleotides){
         }
     return pertenece;
 }
+
 void ToUpper(Kmer& kmer){
     
     for(int i = 0; i<kmer.size(); i++){
