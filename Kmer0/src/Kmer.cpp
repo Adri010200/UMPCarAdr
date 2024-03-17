@@ -15,22 +15,22 @@ using namespace std;
 
 Kmer::Kmer(int k){
         if(k<=0){
-            throw invalid_argument("K no debe ser menor a 0");
+            throw invalid_argument(string("K no debe ser menor o igual a 0, k = " + to_string(k)));
         }
         else{
-            this->_text="";
+            _text="";
             for(int i = 0; i< k; i++){
-                this->_text += this->MISSING_NUCLEOTIDE;
+                _text += MISSING_NUCLEOTIDE;
             }
         }
     }
 
 Kmer::Kmer(const string& text){
     if(text.size() == 0){
-        throw invalid_argument("El texto pasado no debe estar vacío");
+        throw invalid_argument(string("El texto pasado no debe estar vacío"));
     }
     else{
-        this->_text = text;
+        _text = text;
     }
 }
 
@@ -39,11 +39,11 @@ int Kmer::getK() const{
 }
 
 int Kmer::size() const{
-    return this->_text.size();
+    return _text.size();
 }
 
 string Kmer::toString() const{
-    return this->_text;
+    return _text;
 }
 
 const char& Kmer::at(int index) const{
@@ -51,16 +51,16 @@ const char& Kmer::at(int index) const{
         return this -> _text.at(index);
     }
     else{
-        throw out_of_range("El índice buscado debe estar entre 0 y la longitud del string");
+        throw out_of_range(string("El índice buscado debe estar entre 0 y la longitud del string"));
     }
 }
 
 char& Kmer::at(int index){
     if(index >= 0 && index <= this->getK()-1){
-        return this -> _text.at(index);
+        return this->_text.at(index);
     }
     else{
-        throw out_of_range("El índice buscado debe estar entre 0 y la longitud del string");
+        throw out_of_range(string("El índice buscado debe estar entre 0 y la longitud del string"));
     }
 }
 
@@ -71,11 +71,11 @@ void Kmer::normalize(const std::string& validNucleotides){
     bool pertenece0;
     char c;
     for(int i=0; i<this->size(); i++){
-        c = this->toString()[i];
+        c = toString()[i];
         pertenece0 = IsValidNucleotide(c, validNucleotides);
         //Si el carácter no pertenece a validNucleotides:
         if(!pertenece0){
-            this->_text.at(i) = MISSING_NUCLEOTIDE;
+            _text.at(i) = MISSING_NUCLEOTIDE;
         }
     }
 }
@@ -84,16 +84,22 @@ Kmer Kmer::complementary(const std::string& nucleotides,
          const std::string& complementaryNucleotides) const{
     Kmer complementarykmer;
     complementarykmer._text="";
+    bool missingNucleotideBool = false;
     if(nucleotides.size() != complementaryNucleotides.size()){
-        throw invalid_argument("Los argumentos pasados a complementary son incorrectos");
+        throw invalid_argument(string("Los argumentos pasados a complementary son incorrectos"));
     }
     else{
-        for(int i = 0; i<this->getK(); i++){
+        for(int i = 0; i<getK(); i++){
             for(int j = 0; j<complementaryNucleotides.size();j++){
                 if(nucleotides[j] == at(i)){
                     complementarykmer._text += complementaryNucleotides[j];
+                    missingNucleotideBool = true;
                 }
             }
+            if (!missingNucleotideBool){
+                complementarykmer._text += MISSING_NUCLEOTIDE;
+            }
+            missingNucleotideBool = false;
         }
     }
     return complementarykmer;

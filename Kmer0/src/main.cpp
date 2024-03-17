@@ -68,12 +68,10 @@ int main(int argc, char* argv[]) {
 
     // Show the list of kmers and complementary kmers as in the example
     
-    cout<<"Dame un número k y un string:\n";
     int k, i = 0;
     string st="", aux = "";
     cin>>k;
     cin>>st;
-    cout<<"Tu número es: "<<k<<" y tu string es "<<st<<"\n";
     for(i; i<st.size()-(k-1); i++){ 
         for(int j = 0; j<k;j++){
             aux += st[j+i];
@@ -88,6 +86,7 @@ int main(int argc, char* argv[]) {
         ToLower(kmer);
         complementaryKmers[j] = kmer;
     }
+    cout<<i<<endl;
     for(int j=0; j<i;j++){
         cout<<kmers[j].toString()<<"<-->"<<complementaryKmers[j].toString()<<endl;
     }
