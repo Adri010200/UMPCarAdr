@@ -73,7 +73,7 @@ int FindKmerInArrayKmerFreq(const KmerFreq array[], const Kmer kmer,
  * @param array An array of KmerFreq. Input/output parameter
  * @param nElements The number of elements used by the array. Input parameter
 */
-void SortArrayKmerFreq(KmerFreq array[], int nElements);
+void SortArrayKmerFreq(KmerFreq array[], const int nElements);
 
 
 /**
@@ -110,8 +110,8 @@ _G 5
  * @param validNucleotides a string with the list of characters (nucleotides) 
  * that should be considered as valid. Input parameter
 */
-void NormalizeArrayKmerFreq(KmerFreq array[], int nElements, 
-        std::string validNucleotides);
+void NormalizeArrayKmerFreq(KmerFreq array[],int& nElements, //Paso nElements por referencia para que funcione el método Delete 
+        const std::string validNucleotides);
 
 /**
  * @brief Deletes the KmerFreq object from the argument array that is at 
@@ -123,7 +123,7 @@ void NormalizeArrayKmerFreq(KmerFreq array[], int nElements,
  * @throw std::out_of_range Throws an std::out_of_range exception if @p pos 
  * is not in the range from 0 to nElements-1 (both included).
  */
-void DeletePosArrayKmerFreq(KmerFreq array[], int nElements, int pos);
+void DeletePosArrayKmerFreq(KmerFreq array[], int& nElements, const int pos);
 
 /**
  * @brief Deletes the KmerFreq objects from the argument array which verifies
@@ -145,7 +145,7 @@ void DeletePosArrayKmerFreq(KmerFreq array[], int nElements, int pos);
  * frequency less or equals to this value, are deleted. This parameter has zero
  * as default value. Input parameter
  */
-void ZipArrayKmerFreq(KmerFreq array[], int nElements, 
+void ZipArrayKmerFreq(KmerFreq array[], int& nElements, 
         bool deleteMissing=false, int lowerBound=0);
 
 #endif /* ARRAYKMERFREQFUNCTIONS_H */
