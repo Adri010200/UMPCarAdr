@@ -13,12 +13,11 @@
  * Created on 27 October 2023, 12:00
  */
 
-
+#include<iostream>
 #include "ArrayKmerFreqFunctions.h"
 using namespace std;
 
 void ReadArrayKmerFreq(KmerFreq array[], const int dim, int nElements){
-    cin<<nElements;
     if (nElements < 0){
         nElements = 0;
     }
@@ -28,15 +27,15 @@ void ReadArrayKmerFreq(KmerFreq array[], const int dim, int nElements){
     string s;
     int t;
     for(int i = 0; i < nElements; i++){
-        cin<<s;
+        cin>>s;
         Kmer kmero(s);
         array[i].setKmer(kmero);
-        cin<<t;
+        cin>>t;
         array[i].setFrequency(t);
     }
 }
 
-void PrintArrayKmerFreq(const KmerFreq array[], const int nElements){
+void PrintArrayKmerFreq( KmerFreq array[], const int nElements){
     cout<<to_string(nElements)<<endl;
     for(int i = 0; i < nElements; i++){
         cout<<array[i].toString()<<endl;
@@ -45,7 +44,7 @@ void PrintArrayKmerFreq(const KmerFreq array[], const int nElements){
 
 void SwapElementsArrayKmerFreq(KmerFreq array[], const int nElements, const int first,
                 const int second){
-    if(first > nElements || second > nElements){
+    if(first > nElements || second > nElements){ //Debería comprobar también cuando son o no mayores a 0.
         throw out_of_range(string("Alguno de los elementos que se desean intercambiar excede el rango utilizado del array"));
     }
     KmerFreq aux = array[first];
@@ -76,14 +75,15 @@ void SortArrayKmerFreq(KmerFreq array[], const int nElements){
     int max = 0;
     for(int i = 0; i< nElements; i++){
         int j = i+1;
+        max = i;
         for(j; j<nElements; j++){
-            if(array[max] > array[j]){
+            if(array[max].getFrequency() < array[j].getFrequency()){
                 max=j;
             }
         }
-        KmerFreq aux = array[max];
-        array[max] = array[j];
-        array[j] = aux;
+        if(max != i){ //Si encontró un nuevo máximo
+            SwapElementsArrayKmerFreq(array, nElements, i, max);
+        }
     }
 }
 
@@ -110,10 +110,10 @@ void NormalizeArrayKmerFreq(KmerFreq array[],int& nElements,
     bool HayMasKmerIguales = true;
     for(int i = 0; i <nElements-1; i++){
         do{
-            int pos2 = FindKmerInArrayKmerFreq(array[],array[i].getKmer(),i+1,nElements);
+            int pos2 = FindKmerInArrayKmerFreq(array,array[i].getKmer(),i+1,nElements);
             if (pos2 != -1){
                 array[i].setFrequency(array[i].getFrequency() + array[pos2].getFrequency());
-                DeletePosArrayKmerFreq(array[], nElements, pos2);
+                DeletePosArrayKmerFreq(array, nElements, pos2);
             }
             else{
                 HayMasKmerIguales = false;
@@ -129,11 +129,14 @@ void DeletePosArrayKmerFreq(KmerFreq array[], int& nElements, const int pos){
         //De esta forma el último elemento queda como basura pues paso nElements por referencia.
 }
 
-void ZipArrayKmerFreq(KmerFreq array[], int& nElements,  //El array pasado debe estar normalizado
-        bool deleteMissing=false, int lowerBound=0){
+void ZipArrayKmerFreq(KmerFreq array[], int& nElements, bool deleteMissing=false, int lowerBound=0)//Funciona pero no me gusta.
+{//Aquí si se puede poner valor por defecto a deleteMissing y lowerBound
     Kmer kmeraux; //Para acceder a Missing_Nucleotide "_" (Podría hacerlo con array[0].getKmer().MissingNucleotide 
                   //pero sería un error si el array estubiera vacío.)
-    for(int i = 0; i<nElements; i++){
+    SortArrayKmerFreq(array, nElements);
+    int nElementsaux = nElements; //El nElements se ve modificado en el delete de abajo
+                                  //necesitamos que el for recorra todos los kmers.
+    for(int i = 0; i<nElementsaux; i++){
         
         if(array[i].getFrequency() <= lowerBound){
             deleteMissing = true; //No es sensato pero agiliza el proceso, no veo necesario hacer otra variable
@@ -145,7 +148,9 @@ void ZipArrayKmerFreq(KmerFreq array[], int& nElements,  //El array pasado debe 
         }
         
         if(deleteMissing){
-            DeletePosArrayKmerFreq(array[], nElements, i); //Este método ya modifica el nElements
+            DeletePosArrayKmerFreq(array, nElements, i); //Este método ya modifica el nElements
+            SortArrayKmerFreq(array, nElements); 
+            //Es necesario que el array esté ordenado para que cada i corresponda con un kmer.
         }
         deleteMissing = false;
     }

@@ -20,8 +20,9 @@ KmerFreq::KmerFreq(){
     _kmer = kmer;
     _frequency = 0;
 }
-const Kmer& KmerFreq::getKmer(){
-    return const _kmer&;
+const Kmer& KmerFreq::getKmer() const{ //No sé para que sirve el segundo const pero parece necesario
+    const Kmer& kmero = this->_kmer;
+    return kmero;
 }
 int KmerFreq::getFrequency(){
     return _frequency;

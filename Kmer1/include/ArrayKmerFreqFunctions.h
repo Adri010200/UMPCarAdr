@@ -36,7 +36,7 @@ void ReadArrayKmerFreq(KmerFreq array[], const int dim, int nElements);
  * @param array The array of KmerFreq to be printed. Input parameter
  * @param nElements The number of elements used by the array. Input parameter
 */
-void PrintArrayKmerFreq(const KmerFreq array[], const int nElements);
+void PrintArrayKmerFreq( KmerFreq array[], const int nElements);
 
 /**
  * @brief Swaps the elements at positions @p first and @p second in the given
@@ -146,7 +146,7 @@ void DeletePosArrayKmerFreq(KmerFreq array[], int& nElements, const int pos);
  * as default value. Input parameter
  */
 void ZipArrayKmerFreq(KmerFreq array[], int& nElements, 
-        bool deleteMissing=false, int lowerBound=0);
+        bool deleteMissing, int lowerBound); //Da error si se pone valor por defecto a deleteMissing y lowerBound
 
 #endif /* ARRAYKMERFREQFUNCTIONS_H */
 
