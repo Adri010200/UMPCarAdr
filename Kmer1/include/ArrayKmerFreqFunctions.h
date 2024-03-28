@@ -6,12 +6,9 @@
 
 /** 
  * @file ArrayKmerFreqFunctions.h
- * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
- * @author Andrés Cano Utrera <acu@decsai.ugr.es>
- * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
- * @author Javier Martínez Baena <jbaena@ugr.es>
+ * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
+ * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
  * 
- * Created on 27 October 2023, 11:00
  */
 #ifndef ARRAYKMERMFREQFUNCTIONS_H
 #define ARRAYKMERFREQFUNCTIONS_H
