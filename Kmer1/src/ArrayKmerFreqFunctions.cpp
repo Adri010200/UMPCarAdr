@@ -36,7 +36,9 @@ void ReadArrayKmerFreq(KmerFreq array[], const int dim, int nElements){
 }
 
 void PrintArrayKmerFreq( KmerFreq array[], const int nElements){
-    cout<<to_string(nElements)<<endl;
+    if(nElements > 0){
+        cout<<to_string(nElements)<<endl;
+    }
     for(int i = 0; i < nElements; i++){
         cout<<array[i].toString()<<endl;
     }
@@ -113,6 +115,8 @@ void NormalizeArrayKmerFreq(KmerFreq array[],int& nElements,
             int pos2 = FindKmerInArrayKmerFreq(array,array[i].getKmer(),i+1,nElements);
             if (pos2 != -1){
                 array[i].setFrequency(array[i].getFrequency() + array[pos2].getFrequency());
+                array[pos2].setFrequency(0); //Delete no elimina, intercambia, por lo que el de la otra posición 
+                                             //Puede llegar a contarse otra vez. Por si acaso.
                 DeletePosArrayKmerFreq(array, nElements, pos2);
             }
             else{
@@ -129,29 +133,26 @@ void DeletePosArrayKmerFreq(KmerFreq array[], int& nElements, const int pos){
         //De esta forma el último elemento queda como basura pues paso nElements por referencia.
 }
 
-void ZipArrayKmerFreq(KmerFreq array[], int& nElements, bool deleteMissing=false, int lowerBound=0)//Funciona pero no me gusta.
+void ZipArrayKmerFreq(KmerFreq array[], int& nElements, bool deleteMissing=false, int lowerBound=0)
 {//Aquí si se puede poner valor por defecto a deleteMissing y lowerBound
-    Kmer kmeraux; //Para acceder a Missing_Nucleotide "_" (Podría hacerlo con array[0].getKmer().MissingNucleotide 
-                  //pero sería un error si el array estubiera vacío.)
-    SortArrayKmerFreq(array, nElements);
-    int nElementsaux = nElements; //El nElements se ve modificado en el delete de abajo
-                                  //necesitamos que el for recorra todos los kmers.
-    for(int i = 0; i<nElementsaux; i++){
-        
-        if(array[i].getFrequency() <= lowerBound){
-            deleteMissing = true; //No es sensato pero agiliza el proceso, no veo necesario hacer otra variable
-        }
-        for(int j = 0; j < array[i].getKmer().size() && !deleteMissing; j++){
+    
+    Kmer kmeraux;
+    for(int i = 0; i< nElements; i++){
+        for(int j = 0; j < array[i].getKmer().size() ; j++){
             if(array[i].getKmer().at(j) == kmeraux.MISSING_NUCLEOTIDE){
-                deleteMissing= true;
+                array[i].setFrequency(lowerBound);
             }
         }
-        
-        if(deleteMissing){
-            DeletePosArrayKmerFreq(array, nElements, i); //Este método ya modifica el nElements
-            SortArrayKmerFreq(array, nElements); 
-            //Es necesario que el array esté ordenado para que cada i corresponda con un kmer.
-        }
-        deleteMissing = false;
     }
+    //Todos los kmers inválidos tendrán frecuencia menor o igual a lowerBound
+    SortArrayKmerFreq(array,nElements);
+    //Todos los kmers inválidos estarán al final del array
+    int invalidos = 0;
+    for(int i = 0; i < nElements; i++){
+        if(array[i].getFrequency() <= lowerBound){
+            invalidos++;
+        }
+    }
+    nElements -= invalidos;
+    //Todos los kmers inválidos pasarán al olvido.
 }

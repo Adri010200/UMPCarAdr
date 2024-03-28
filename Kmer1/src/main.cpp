@@ -68,7 +68,11 @@ int main(int argc, char* argv[]) {
     // Sort the array kmers
     
     // Print the array kmers in the standard output
-
+    cin>>nKmers;
+    ReadArrayKmerFreq(kmers, DIM_ARRAY_KMERS, nKmers);
+    NormalizeArrayKmerFreq(kmers, nKmers, VALID_NUCLEOTIDES);
+    ZipArrayKmerFreq(kmers, nKmers, false, 0); //Zip se encarga de ordenar también, es necesario para que funcione
+    PrintArrayKmerFreq(kmers, nKmers);
     return 0;
 }
 
