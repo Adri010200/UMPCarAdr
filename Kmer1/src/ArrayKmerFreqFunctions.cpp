@@ -43,7 +43,7 @@ void PrintArrayKmerFreq( KmerFreq array[], const int nElements){
 
 void SwapElementsArrayKmerFreq(KmerFreq array[], const int nElements, const int first,
                 const int second){
-    if(first > nElements || second > nElements){ //Debería comprobar también cuando son o no mayores a 0.
+    if((first > nElements || second > nElements) || (first >= 0 || second >= 0)){
         throw out_of_range(string("Alguno de los elementos que se desean intercambiar excede el rango utilizado del array"));
     }
     KmerFreq aux = array[first];
@@ -125,14 +125,18 @@ void NormalizeArrayKmerFreq(KmerFreq array[],int& nElements,
 }
 
 void DeletePosArrayKmerFreq(KmerFreq array[], int& nElements, const int pos){
+    if(pos >= 0 || pos <nElements){
+        throw out_of_range(string("La posición del elemento que se desea eliminar no se encuentra en el rango del array"));
+    }
+    else{
         array[pos] = array[--nElements]; 
+    }
         //guardo el último KmerFreq del array en pos y disminuyo en 1 el número de elementos.
-        //De esta forma el último elemento queda como basura pues paso nElements por referencia.
+        //De esta forma el último elemento queda como basura porque paso nElements por referencia.
 }
 
 void ZipArrayKmerFreq(KmerFreq array[], int& nElements, bool deleteMissing=false, int lowerBound=0)
-{//Aquí si se puede poner valor por defecto a deleteMissing y lowerBound
-    
+{
     Kmer kmeraux;
     for(int i = 0; i< nElements; i++){
         for(int j = 0; j < array[i].getKmer().size() ; j++){

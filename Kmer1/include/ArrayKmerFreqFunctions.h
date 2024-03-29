@@ -143,7 +143,7 @@ void DeletePosArrayKmerFreq(KmerFreq array[], int& nElements, const int pos);
  * as default value. Input parameter
  */
 void ZipArrayKmerFreq(KmerFreq array[], int& nElements, 
-        bool deleteMissing, int lowerBound); //Da error si se pone valor por defecto a deleteMissing y lowerBound
+        bool deleteMissing, int lowerBound);
 
 #endif /* ARRAYKMERFREQFUNCTIONS_H */
 

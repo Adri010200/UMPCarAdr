@@ -6,6 +6,15 @@
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+<<<<<<< Updated upstream
         <group/>
+=======
+        <group>
+            <file>file:/C:/Users/adri0/OneDrive/Escritorio/Uni/MP/UMPCarAdr/UMPCarAdr/Kmer1/src/ArrayKmerFreqFunctions.cpp</file>
+            <file>file:/C:/Users/adri0/OneDrive/Escritorio/Uni/MP/UMPCarAdr/UMPCarAdr/Kmer1/data/humanPairs_short_disordered.k1in</file>
+            <file>file:/C:/Users/adri0/OneDrive/Escritorio/Uni/MP/UMPCarAdr/UMPCarAdr/Kmer1/src/main.cpp</file>
+            <file>file:/C:/Users/adri0/OneDrive/Escritorio/Uni/MP/UMPCarAdr/UMPCarAdr/Kmer1/data/humanPairs_short_disordered.k1out</file>
+        </group>
+>>>>>>> Stashed changes
     </open-files>
 </project-private>
