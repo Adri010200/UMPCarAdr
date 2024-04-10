@@ -119,3 +119,21 @@ void Profile::sort(){
         }
     }
 }
+
+/*include <cassert>
+ *freopen(cadena, "r", stdin) para introducir un fichero
+ *freopen(cadena,"w", stdout) para escribir un fichero
+ * 
+ * Método del de prácticas:Ej:
+ * fopen(argv[2], "r")
+ * usar fclose y feof.
+ */
+void save(char fileName[]){
+    if(!freopen(fileName, "w",stdout)){
+        throw ios_base::failure("Ha habido un error a la hora de guardar el archivo");
+    }
+    cout<<toString();
+}
+void load(const char fileName[]){
+    
+}
