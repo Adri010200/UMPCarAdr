@@ -7,7 +7,6 @@
  * @file Kmer.cpp
  * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
  * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
- * 
  */
 
 #include "Kmer.h"

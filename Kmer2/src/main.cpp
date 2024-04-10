@@ -5,12 +5,8 @@
 
 /**
  * @file main.cpp
- * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
- * @author Andrés Cano Utrera <acu@decsai.ugr.es>
- * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
- * @author Javier Martínez Baena <jbaena@ugr.es>
- *
- * Created on 31 October de 2023, 14:30
+ * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
+ * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
  */
 
 #include <iostream>
