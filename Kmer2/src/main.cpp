@@ -78,16 +78,30 @@ int main(int argc, char* argv[]) {
 
     // Check if the number of running arguments is correct, otherwise call to
     // showEnglishHelp(cerr) and end main()
-
+    if(argc <=2){
+        showEnglishHelp(cerr);
+        return 1;
+    }
     // Load and normalize the first input Profile file
-
+    Profile p1;
+    p1.load(argv[1]);
+    p1.normalize(VALID_NUCLEOTIDES);
     // Use a loop to load, normalize and obtain the join with the rest of Profiles
-
+    Profile p2, aux;
+    for(int i=2; i<argc; i++){
+        aux.load(argv[i]);
+        p2.join(aux);
+    }
+    p2.normalize(VALID_NUCLEOTIDES);
     // Zip the resulting Profile
-
+    bool dm = false;
+    int lb = 0;
+    p2.zip(dm, lb);
     // Sort the zipped Profile
-
+    p2.sort();
     // Save the final Profile to the output file
-
+    p2.save(argv[1]);
+    
+    
     return 0;
 }

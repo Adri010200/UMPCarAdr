@@ -20,7 +20,7 @@ const Kmer& KmerFreq::getKmer() const{
     const Kmer& kmero = this->_kmer;
     return kmero;
 }
-int KmerFreq::getFrequency(){
+const int KmerFreq::getFrequency(){
     return _frequency;
 }
 void KmerFreq::setKmer(Kmer kmer){
