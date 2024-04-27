@@ -132,6 +132,7 @@ void Profile::save(const char fileName[]) const{
     if(!freopen(fileName, "w",stdout)){
         throw ios_base::failure("Ha habido un error a la hora de guardar el archivo");
     }
+    cout<<MAGIC_STRING_T<<endl;
     cout<<toString();
 }
 void Profile::load(const char fileName[]){
@@ -141,9 +142,6 @@ void Profile::load(const char fileName[]){
         throw ios_base::failure("El archivo dado no pudo abrirse.");
     }
     cin>>s; //Correspondiente al Magic_String
-    if(s != this->MAGIC_STRING_T){
-        throw invalid_argument("El MAGIC_STRING del archivo que se está leyendo no es válido");
-    }
     cin>>s;//Correspondiente a el nombre
     _profileId = s;
     cin>>num; //Correspondiente al número de kmerfreqs

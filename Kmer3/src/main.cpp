@@ -86,29 +86,36 @@ int main(int argc, char* argv[]) {
     // Print name of the file and identifier that takes min|max distance to the first one
 
     // Deallocate the dynamic array of Profile
-    Profile p1(2);
-    Profile p2(2);
-    Kmer k1("BBB");
-    Kmer k2("BBB");
-    KmerFreq kf1;
-    KmerFreq kf2;
-    kf1.setKmer(k1);
-    kf2.setKmer(k2);
-    kf1.setFrequency(2);
-    kf2.setFrequency(1);
-    KmerFreq* kfaux = p1.at(0);
-    *kfaux = kf1; 
-    kfaux = p1.at(1);
-    * kfaux = kf2;
+    Profile* parray = new Profile[argc];
+    double* distarray = new double[argc-1];
+    for(int i = 1; i< argc; i++){
+        parray[i-1].load(argv[i]);
+    }
+    Profile pout = parray[0];
+    for(int i=0; i<argc-2; i++){ //No contamos ni el nombre del programa ni el primer argumento.
+        distarray[i] = pout.getDistance(parray[i+1]);
+    }
+    for(int i=0; i<argc-2; i++){
+        cout<<"Distancia entre " <<argv[1]<<" y "<<argv[i+2]<<": "<< distarray[i]<<endl;
+    }
+    //Búsqueda del mínimo y el máximo.
+    double min = 1, max = 0;//Sabemos que estará entre uno y cero
+    int pmin, pmax;
+    for(int i= 0; i<argc-2; i++){
+        if(distarray[i] < min){
+            min = distarray[i];
+            pmin = i;
+        }
+        if(distarray[i] > max){
+            max = distarray[i];
+            pmax = i;
+        }
+    }
     
-    kfaux = p2.at(0);
-    * kfaux = kf2;
-    kfaux = p2.at(1);
-    * kfaux = kf2;
+    cout<<endl<<"Distancia mínima: "<< min << " del archivo: "<< argv[pmin+2];
+    cout<<endl<<"Distancia máxima: "<< max << " del archivo: "<< argv[pmax+2]<<endl;
     
-    cout<<p1.toString()<<endl<<endl<<p2.toString()<<endl;
-    
-    cout<<to_string(p1.getDistance(p2));
-    
+    delete[] parray;
+    delete[] distarray;
     return 0;
 }
