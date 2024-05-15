@@ -19,7 +19,7 @@ const string Profile::MAGIC_STRING_T="MP-KMER-T-1.0";
 Profile::Profile(){
     this->setProfileId("unknown");
     _size=0;
-    _vectorKmerFreq = new kmerFreq[INITIAL_CAPACITY];
+    _vectorKmerFreq = new KmerFreq[INITIAL_CAPACITY];
     _capacity = INITIAL_CAPACITY;
 }
 Profile::Profile(const int size){
@@ -30,12 +30,14 @@ Profile::Profile(const int size){
     }
     if(size > INITIAL_CAPACITY){
         //Reservar más memoria y establecer capacidad
+        reservaMemoria(size);
+        
     }
     else{
-        _vectorKmerFreq = new kmerFreq[INITIAL_CAPACITY];
+        _vectorKmerFreq = new KmerFreq[INITIAL_CAPACITY];
         _capacity = INITIAL_CAPACITY;
+        _size=size;
     }
-    _size=size;
     
     KmerFreq zero;
     Kmer kmer(1);
@@ -45,18 +47,27 @@ Profile::Profile(const int size){
         _vectorKmerFreq[i] = zero;
     }
 }
-Profile::Profile(Profile orig):_profileId(orig.getProfileId()), _size(orig.getSize()),_capacity(orig.getCapacity()) {
-    //Intentar usar el operador = 
-    /*_vectorKmerFreq = new kmerFreq[orig.getCapacity()];
-    for(int i = 0; i < orig._size; i++){
-        _vectorKmerFreq[i] = orig.
-    }*/
+Profile::Profile(const Profile &orig):_profileId(orig.getProfileId()), _size(orig.getSize()),_capacity(orig.getCapacity()) {
+    *this = orig;
 }
 Profile::~Profile(){
     //Las variables estáticas se destruirán automáticamente
     delete[] _vectorKmerFreq;
 }
-
+Profile& Profile::operator=(const Profile &orig){
+    if(&orig != this){
+        delete[] this->_vectorKmerFreq;
+        this->_size = orig.getSize();
+        this->_capacity = orig.getCapacity();
+        this->_vectorKmerFreq = new KmerFreq[orig.getCapacity()];
+        for(int i = 0; i<orig.getSize(); i++){
+            /*_vectorKmerFreq[i] = orig.at(i);*/ //no me funciona
+            _vectorKmerFreq[i].setFrequency(orig.at(i)->getFrequency());
+            _vectorKmerFreq[i].setKmer(orig.at(i)->getKmer());
+        }
+    }
+    return *this;
+}
 const string &Profile::getProfileId() const{
     return  _profileId;
 }
@@ -64,17 +75,18 @@ void Profile::setProfileId(const string id){
     _profileId = id;
 }
 const KmerFreq *Profile::at(const int index) const{
-    if(index < 0 || index > DIM_VECTOR_KMER_FREQ){
-        throw out_of_range("En el método at, el índice " + to_string(index) +
-                "debe estar entre 0 y " + to_string(_size));
+    if(index < 0 || index > this->getSize()){ 
+        //Se usa getSize porque no tiene sentido acceder a un KmerFreq que no estés usando si no lo vas a modificar
+        throw out_of_range("En el método no modificador at, el índice " + to_string(index) +
+                "debe estar entre 0 y " + to_string(this->getSize()));
     }
     
     return &(_vectorKmerFreq[index]);
 }
 KmerFreq *Profile::at(const int index){
-    if(index < 0 || index > DIM_VECTOR_KMER_FREQ){
-        throw out_of_range("En el método at, el índice " + to_string(index) +
-                "debe estar entre 0 y " + to_string(_size));
+    if(index < 0 || index > this->getCapacity()){
+        throw out_of_range("En el método modificador at, el índice " + to_string(index) + 
+                "debe estar entre 0 y " + to_string(this->getCapacity()));
     }
     return &_vectorKmerFreq[index];
 }
@@ -82,7 +94,7 @@ const int Profile::getSize() const{
     return _size;
 }
 const int Profile::getCapacity() const{
-    return DIM_VECTOR_KMER_FREQ;
+    return _capacity;
 }
 const int Profile::findKmer(const Kmer kmer, const int initialPos, const int finalPos) const{
     int pos;
@@ -114,8 +126,8 @@ const int Profile::findKmer(const Kmer kmer) const{
 }
 const string Profile::toString() const{
     string s = "";
-    s += _profileId + "\n";
-    s += to_string(_size);
+    s += this->getProfileId() + "\n";
+    s += to_string(this->getSize());
     for(int i = 0; i < getSize(); i++){
         s += "\n" + _vectorKmerFreq[i].getKmer().toString() + " " + to_string(_vectorKmerFreq[i].getFrequency());
     }
@@ -164,12 +176,18 @@ void Profile::load(const char fileName[]){
         throw ios_base::failure("El archivo dado no pudo abrirse.");
     }
     cin>>s; //Correspondiente al Magic_String
+    if(s != this->MAGIC_STRING_T){
+        throw ios_base::failure("Los MagicString no coinciden.");
+    }
     cin>>s;//Correspondiente a el nombre
-    _profileId = s;
+    this->setProfileId(s);
     cin>>num; //Correspondiente al número de kmerfreqs
-    if(num < 0 || num > DIM_VECTOR_KMER_FREQ){
-        throw out_of_range ("La cantidad de kmers del archivo que se está " 
-                "leyendo excede los límites de la capacidad de profile");
+    if(num < 0){
+        throw out_of_range ("El número de kmerFreqs del archivo que se está leyendo no puede ser 0");
+    }
+    if(num > this->getCapacity()){
+        //Aumentar la capacidad de this
+        reservaMemoria(num);
     }
     _size = num;
     KmerFreq kf;
@@ -191,20 +209,24 @@ void Profile::append(const KmerFreq &kmerFreq){
             _vectorKmerFreq[i].setFrequency(fq);
         }
     }
-    if(!apears){
+    if(!apears && this->getCapacity() == this->getSize()+1){
+        //Aumentar la capacidad y el size
+        reservaMemoria(this->getSize()+1);
+    }
+    else if(!apears){
         _vectorKmerFreq[_size++] = kmerFreq;
     }
 }
 void Profile::normalize(const string validNucleotides){
     Kmer aux;
-    for(int i = 0; i<_size; i++){
+    for(int i = 0; i<this->getSize(); i++){
         aux = _vectorKmerFreq[i].getKmer();
         aux.normalize(validNucleotides);
         _vectorKmerFreq[i].setKmer(aux);
     }
     int findk;
-    for(int i = 0; i<_size; i++){
-        findk = findKmer(_vectorKmerFreq[i].getKmer(), i+1, _size-1);
+    for(int i = 0; i<this->getSize(); i++){
+        findk = findKmer(_vectorKmerFreq[i].getKmer(), i+1, this->getSize()-1);
         if(findk != -1){
             _vectorKmerFreq[i].setFrequency(_vectorKmerFreq[i].getFrequency() + _vectorKmerFreq[findk].getFrequency());
             deletePos(findk);
@@ -217,13 +239,13 @@ void Profile::deletePos(const int pos){
         throw out_of_range("No se puede eliminar el KmerFreq de la posición " + to_string(pos) + 
                 ", esta posición no es válida ya que excede el rango del vector usado");
     }
-    for (int i = pos; i < _size-1; i++) {
+    for (int i = pos; i < this->getSize()-1; i++) {
         _vectorKmerFreq[i] = _vectorKmerFreq[i + 1];
     }
     _size--;
 }
 void Profile::zip(bool deleteMissing=false, const int lowerBound = 0){
-    for(int i = 0; i<_size; i++){
+    for(int i = 0; i<this->getSize(); i++){
         for(int j = 0; j < _vectorKmerFreq[i].getKmer().size(); j++){
             if(_vectorKmerFreq[i].getKmer().at(j) == Kmer::MISSING_NUCLEOTIDE){
                 deleteMissing = true;
@@ -266,4 +288,19 @@ const double Profile::getDistance (const Profile otherProfile) const{
     }
     resultado /= this->getSize()*otherProfile.getSize();
     return resultado;
+}
+//Método para reservar más memoria
+void Profile::reservaMemoria (const int size){
+    int newcapacity = this->getCapacity();
+    while(newcapacity <= size){
+        newcapacity +=BLOCK_SIZE;
+    }
+    KmerFreq* aux = new KmerFreq[newcapacity];
+    for(int i=0; i<this->getSize(); i++){
+        aux[i] = _vectorKmerFreq[i];
+    }
+    delete[] _vectorKmerFreq;
+    _vectorKmerFreq = aux;
+    _capacity = newcapacity;
+    _size = size;
 }
