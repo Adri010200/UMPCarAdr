@@ -30,6 +30,7 @@ Profile::Profile(const int size){
     }
     if(size > INITIAL_CAPACITY){
         //Reservar más memoria y establecer capacidad
+        _capacity = INITIAL_CAPACITY;
         reservaMemoria(size);
         
     }
@@ -303,4 +304,6 @@ void Profile::reservaMemoria (const int size){
     _vectorKmerFreq = aux;
     _capacity = newcapacity;
     _size = size;
+    //Allocate reserva memoria,
+    //Reallocate reubica una reserva en otra más grande
 }

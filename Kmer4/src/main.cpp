@@ -86,73 +86,33 @@ int main(int argc, char* argv[]) {
     // Print name of the file and identifier that takes min|max distance to the first one
 
     // Deallocate the dynamic array of Profile
-    bool argop = false;
-    if(argv[1] == "-t"){
-        argop=true;
-    }
     
-    Profile* parray;
-    double* distarray;
-    if(!argop){
-        parray = new Profile[argc-1]; //en argv[0] se encuentra el nombre del proyecto
-        distarray = new double[argc-2];
-        for(int i = 0; i< argc-1; i++){
-            parray[i].load(argv[i+1]);
+    if(argv[1] == "-t"){
+        Profile* parray = new Profile[argc-1];//Le quitamos el primero
+        Profile p;
+        p.load(argv[1]);
+        for(int i = 0; i<argc-1; i++){
+            parray[i].load(argv[i+2]);
         }
-        for(int i=0; i<argc-2; i++){ //No contamos el nombre del programa
-            distarray[i] = parray[0].getDistance(parray[i+1]);
-        }
-        for(int i=0; i<argc-2; i++){
-            cout<<"Distancia entre " <<argv[1]<<" y "<<argv[i+2]<<": "<< distarray[i]<<endl;
-        }
-        
-        //Búsqueda del mínimo:
-        double min = 1;
-        int pmin;
-        for(int i= 0; i<argc-2; i++){
-            if(distarray[i] < min){
-                min = distarray[i];
-                pmin = i;
-            }
-        }
-        cout<<endl<<"Distancia mínima: "<< min << " del archivo: "<< argv[pmin+2];
-    }
-    else{
-        parray = new Profile[argc-3];
-        distarray = new double[argc-4];
-        for(int i = 0; i<argc-3; i++){
-            parray[i].load(argv[i+3]);
-        }
-        for(int i = 0; i<argc-4; i++){
-            distarray[i] = parray[0].getDistance(parray[i+1]);
-        }
-        for(int i=0; i<argc-4; i++){
-            cout<<"Distancia entre " <<argv[3]<<" y "<<argv[i+4]<<": "<< distarray[i]<<endl;
-        }
-        
-        //Calculamos el mínimo y el máximo y luego vemos cual enseñamos.
-        
-        double min = 1, max = 0;//Sabemos que estará entre uno y cero
-        int pmin, pmax;
-        for(int i= 0; i<argc-4; i++){
-            if(distarray[i] < min){
-                min = distarray[i];
-                pmin = i;
-            }
-            if(distarray[i] > max){
-                max = distarray[i];
-                pmax = i;
+        double dist = p.getDistance(parray[0]);
+        if(argv[2] == "min"){
+            for(int i = 1; i<argc-1; i++){
+                if(dist > p.getDistance(parray[i])){
+                    dist = p.getDistance(parray[i]);
+                }
             }
         }
         if(argv[2] == "max"){
-            cout<<endl<<"Distancia máxima: "<< max << " del archivo: "<< argv[pmax+4];
-        }
-        else{
-            cout<<endl<<"Distancia mínima: "<< min << " del archivo: "<< argv[pmin+4];
+            for(int i = 1; i<argc-1; i++){
+                if(dist > p.getDistance(parray[i])){
+                    dist = p.getDistance(parray[i]);
+                }
+            }
         }
     }
-    delete[] parray;
-    delete[] distarray;
+    else{
+        
+    }
     return 0;
 }
 
