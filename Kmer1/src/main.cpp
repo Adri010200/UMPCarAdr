@@ -5,9 +5,12 @@
 
 /**
  * @file main.cpp
- * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
- * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
- * 
+ * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
+ * @author Andrés Cano Utrera <acu@decsai.ugr.es>
+ * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
+ * @author Javier Martínez Baena <jbaena@ugr.es>
+ *
+ * Created on 27 October 2023, 12:00
  */
 
 #include <iostream>
@@ -65,11 +68,7 @@ int main(int argc, char* argv[]) {
     // Sort the array kmers
     
     // Print the array kmers in the standard output
-    cin>>nKmers;
-    ReadArrayKmerFreq(kmers, DIM_ARRAY_KMERS, nKmers);
-    NormalizeArrayKmerFreq(kmers, nKmers, VALID_NUCLEOTIDES);
-    ZipArrayKmerFreq(kmers, nKmers, false, 0); //Zip se encarga de ordenar también.
-    PrintArrayKmerFreq(kmers, nKmers);
+
     return 0;
 }
 

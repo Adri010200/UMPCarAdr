@@ -1,5 +1,5 @@
 /*
- * Metodología de la Programación: Kmer3
+ * Metodología de la Programación: Kmer4
  * Curso 2023/2024
  */
 
@@ -10,7 +10,7 @@
  * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
  * @author Javier Martínez Baena <jbaena@ugr.es>
  * 
- * Created on 16 November 2023, 14:15
+ * Created on 17 November 2023, 10:15
  */
 
 #ifndef KMER_H

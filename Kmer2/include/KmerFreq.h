@@ -1,12 +1,16 @@
 /*
- * Metodología de la Programación: Kmer1
+ * Metodología de la Programación: Kmer2
  * Curso 2023/2024
  */
 
-/** 
- * @file KmerFreq.h
- * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
- * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
+/* 
+ * @file   KmerFreq.h
+ * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
+ * @author Andrés Cano Utrera <acu@decsai.ugr.es>
+ * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
+ * @author Javier Martínez Baena <jbaena@ugr.es>
+ *
+ * Created on 31 October 2023, 14:30
  */
 
 
@@ -34,14 +38,14 @@ public:
      * Query method
      * @return A const reference to the Kmer of this KmerFreq object
      */
-    const Kmer& getKmer() const;
+    Kmer getKmer();
 
     /**
      * @brief Gets the frequency of this KmerFreq object
      * Query method
      * @return The frequency of this KmerFreq object
      */
-    const int getFrequency();
+    int getFrequency();
 
     /**
      * @brief Sets the Kmer of this KmerFreq object.

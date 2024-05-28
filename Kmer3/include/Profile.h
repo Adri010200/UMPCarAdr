@@ -1,12 +1,16 @@
 /*
- * Metodología de la Programación: Kmer2
+ * Metodología de la Programación: Kmer3
  * Curso 2023/2024
  */
 
 /** 
  * @file Profile.h
- * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
- * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
+ * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
+ * @author Andrés Cano Utrera <acu@decsai.ugr.es>
+ * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
+ * @author Javier Martínez Baena <jbaena@ugr.es>
+ * 
+ * Created on 16 November 2023, 14:15
  */
 
 #ifndef PROFILE_H
@@ -42,7 +46,7 @@ public:
      * @param size The size for the vector of kmers in this Profile. 
      * Input parameter
      */
-    Profile(const int size);
+    Profile(int size);
 
 
     /**
@@ -50,14 +54,14 @@ public:
      * Query method
      * @return A const reference to the identifier of this profile object
      */
-    const std::string &getProfileId() const;
+    std::string getProfileId();
 
     /**
      * @brief Sets a new identifier for this profile object.
      * Modifier method
      * @param id The new identifier. Input parameter
      */
-    void setProfileId(const std::string id);
+    void setProfileId(std::string id);
 
 
     /**
@@ -69,7 +73,7 @@ public:
      * given index is not valid
      * @return A const reference to the KmerFreq at the given position
      */
-    const KmerFreq *at(const int index) const; 
+    KmerFreq at(int index); 
 
     /**
      * @brief Gets a reference to the KmerFreq at the given position of the 
@@ -80,21 +84,53 @@ public:
      * given index is not valid
      * @return A reference to the KmerFreq at the given position
      */
-    KmerFreq *at(const int index); //Para la sobrecarga de operadores
+    KmerFreq at(int index); 
 
     /**
      * @brief Gets the number of KmerFreq objects.
      * Query method
      * @return The number of KmerFreq objects 
      */
-    const int getSize() const;
+    int getSize();
     
     /**
      * @brief Gets the capacity of the vector of KmerFreq objects.
      * Query method
      * @return The capacity of the vector of KmerFreq objects
      */
-    const int getCapacity() const;
+    int getCapacity();
+    
+    /**
+     * @brief Gets the distance between this Profile object (\f$P_1\f$) and 
+     * the given argument object @p otherProfile (\f$P_2\f$).
+     * The distance between two Profiles \f$P_1\f$ and \f$P_2\f$ is 
+     * calculated in the following way:
+     * 
+     * \f$d = \frac{ \sum_{kmer_i(P_1)} | rank_{kmer_i(P_1)}^{P_1} - 
+     * rank_{kmer_i(P_1)}^{P_2} | }{size(P_1) * size(P_2) }\f$, 
+     * 
+     * where \f$kmer_i(p_j)\f$ is the kmer \f$i\f$ of the Profile \f$p_j, 
+     * j \in \{1, 2\}\f$ and \f$rank_{kmer_i(p_j)}^{p_k}\f$ is the ranking
+     * of the kmer \f$i\f$ of the Profile \f$p_j, j \in \{1, 2\}\f$ in the
+     * Profile \f$p_k\f$. 
+     * 
+     * The rank of a kmer is the position in which it
+     * appears in the list of KmerFreq. We consider 0 as the 
+     * first position (rank equals to 0). When calculating 
+     * \f$rank_{kmer_i(P_1)}^{P_2}\f$, if the kmer \f$kmer_i(P_1)\f$ 
+     * does not appears in the Profile \f$P_2\f$ we consider that the rank
+     * is equals to the size of Profile \f$P_2\f$. 
+     * Query method
+     * @param otherProfile A Profile object. Input parameter
+     * @pre The list of kmers of this and otherProfile should be ordered in 
+     * decreasing order of frequency. This is not checked in this method.
+     * @throw Throws a std::invalid_argument exception if the implicit object
+     * (*this) or the argument Profile object are empty, that is, they do not 
+     * have any kmer.
+     * @return The distance between this Profile object and the given 
+     * argument @p otherProfile.
+     */
+    double getDistance(Profile otherProfile);
     
     /**
      * @brief Searchs the given kmer in the list of kmers in this
@@ -109,8 +145,8 @@ public:
      * @return If found, it returns the position where the kmer 
      * was found. If not, it returns -1
      */
-    const int findKmer(const Kmer kmer, const int initialPos, const int finalPos) const;
-    
+    int findKmer(Kmer kmer, int initialPos, int finalPos);
+
     /**
      * @brief Searchs the given kmer in the list of kmers in this
      * Profile. If found, it returns the position where it was found. If not,
@@ -121,7 +157,7 @@ public:
      * @return If found, it returns the position where the kmer 
      * was found. If not, it returns -1
      */
-    const int findKmer(const Kmer kmer) const;
+    int findKmer(Kmer kmer);
 
     /**
      * @brief Obtains a string with the following content:
@@ -133,7 +169,7 @@ public:
      * @return A string with the number of kmers and the list of pairs of
      * kmer-frequency in the object
      */
-    const std::string toString() const;
+    std::string toString();
 
     /**
      * @brief Sorts the vector of KmerFreq in decreasing order of frequency.
@@ -153,7 +189,7 @@ public:
      * if the given file cannot be opened or if an error occurs while writing
      * to the file
      */
-    void save(const char fileName[]) const;
+    void save(char fileName[]);
 
     /**
      * @brief Loads into this object the Profile object stored in the given 
@@ -172,7 +208,7 @@ public:
      * @throw throw std::invalid_argument Throws a std::invalid_argument if
      * an invalid magic string is found in the given file
      */
-    void load(const char fileName[]);
+    void load(char fileName[]);
      
     /**
      * @brief Appends a copy of the given KmerFreq to this Profile object.
@@ -188,7 +224,7 @@ public:
      * can be appended to the array.
      * @param kmerFreq The KmerFreq to append to this object. Input paramether
      */
-    void append(const KmerFreq &kmerFreq);
+    void append(KmerFreq kmerFreq);
     
     /**
      * @brief Normalizes the Kmers of the vector of KmerFreq in this object. 
@@ -224,7 +260,7 @@ _G 5
      * @param validNucleotides a string with the list of characters (nucleotides) 
      * that should be considered as valid. Input parameter
      */
-    void normalize(const std::string validNucleotides);
+    void normalize(std::string validNucleotides);
 
     /**
      * @brief Deletes the KmerFreq object from the vector of KmerFreq in this
@@ -235,7 +271,7 @@ _G 5
      * @throw std::out_of_range Throws an std::out_of_range exception if @p pos 
      * is not in the range from 0 to size()-1 (both included).
      */
-    void deletePos(const int pos);
+    void deletePos(int pos);
 
     /**
      * @brief Deletes the KmerFreq objects from the vector of KmerFreq in this
@@ -255,7 +291,7 @@ _G 5
      * deleted. This parameter has zero as default value.
      * Input parameter
      */
-    void zip(bool deleteMissing, const int lowerBound);
+    void zip(bool deleteMissing=false, int lowerBound = 0);
     
     /**
      * @brief Appends to this Profile object, the list of pairs  
@@ -266,16 +302,7 @@ _G 5
      * Modifier method
      * @param profile A Profile object. Input parameter
      */
-    void join(const Profile& profile);
-    
-    
-/**
- * 
- * 
- * 
- * 
-   **/
-    const double getDistance (const Profile otherProfile) const;
+    void join(Profile profile);
     
 private:
     static const int DIM_VECTOR_KMER_FREQ = 2000; ///< The capacity of the array _vectorKmerFreq
