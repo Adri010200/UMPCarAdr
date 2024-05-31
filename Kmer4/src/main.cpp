@@ -86,6 +86,33 @@ int main(int argc, char* argv[]) {
     // Print name of the file and identifier that takes min|max distance to the first one
 
     // Deallocate the dynamic array of Profile
+    
+    if(argv[1] == "-t"){
+        Profile* parray = new Profile[argc-1];//Le quitamos el primero
+        Profile p;
+        p.load(argv[1]);
+        for(int i = 0; i<argc-1; i++){
+            parray[i].load(argv[i+2]);
+        }
+        double dist = p.getDistance(parray[0]);
+        if(argv[2] == "min"){
+            for(int i = 1; i<argc-1; i++){
+                if(dist > p.getDistance(parray[i])){
+                    dist = p.getDistance(parray[i]);
+                }
+            }
+        }
+        if(argv[2] == "max"){
+            for(int i = 1; i<argc-1; i++){
+                if(dist > p.getDistance(parray[i])){
+                    dist = p.getDistance(parray[i]);
+                }
+            }
+        }
+    }
+    else{
+        
+    }
     return 0;
 }
 

@@ -1,5 +1,5 @@
 /*
- * Metodología de la Programación: Kmer4
+ * Metodología de la Programación: Kmer3
  * Curso 2023/2024
  */
 
@@ -10,7 +10,7 @@
  * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
  * @author Javier Martínez Baena <jbaena@ugr.es>
  * 
- * Created on 17 November 2023, 10:15
+ * Created on 16 November 2023, 14:15
  */
 
 #ifndef KMER_H
@@ -139,6 +139,20 @@ public:
     Kmer complementary(const std::string& nucleotides, 
          const std::string& complementaryNucleotides) const;
     
+    /**
+    * @brief Converts to lowercase the characters (nucleotides) of the given Kmer
+    * @deprecated This function could go away in future versions
+    * @param kmer A Kmer object. Output parameter
+    */
+   void ToLower(Kmer& kmer);
+
+   /**
+    * @brief Converts to uppercase the characters (nucleotides) of the given Kmer
+    * @deprecated This function could go away in future versions
+    * @param kmer A Kmer object. Output parameter
+    */
+   void ToUpper(Kmer& kmer);
+    
 private:
     /**
      * A string with a list of characters representing the nucleotides in 
@@ -159,18 +173,6 @@ private:
  */
 bool IsValidNucleotide(char nucleotide, const std::string& validNucleotides);
 
-/**
- * @brief Converts to lowercase the characters (nucleotides) of the given Kmer
- * @deprecated This function could go away in future versions
- * @param kmer A Kmer object. Output parameter
- */
-void ToLower(Kmer& kmer);
 
-/**
- * @brief Converts to uppercase the characters (nucleotides) of the given Kmer
- * @deprecated This function could go away in future versions
- * @param kmer A Kmer object. Output parameter
- */
-void ToUpper(Kmer& kmer);
 
 #endif /* KMER_H */

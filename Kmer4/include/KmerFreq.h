@@ -1,16 +1,12 @@
 /*
- * Metodología de la Programación: Kmer4
+ * Metodología de la Programación: Kmer1
  * Curso 2023/2024
  */
 
-/* 
- * @file   KmerFreq.h
- * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
- * @author Andrés Cano Utrera <acu@decsai.ugr.es>
- * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
- * @author Javier Martínez Baena <jbaena@ugr.es>
- *
- * Created on 17 November 2023, 10:15
+/** 
+ * @file KmerFreq.h
+ * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
+ * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
  */
 
 
@@ -31,21 +27,21 @@ public:
      * It builds a KmerFreq object containing a Kmer with one nucleotide, the
      * unknown nucleotide (Kmer::MISSING_NUCLEOTIDE) and 0 as its frequency
      */
-    KmerFreq();
+    KmerFreq() = default;
 
     /**
      * @brief Gets a const reference to the Kmer of this KmerFreq object
      * Query method
      * @return A const reference to the Kmer of this KmerFreq object
      */
-    Kmer getKmer();
+    const Kmer& getKmer() const;
 
     /**
      * @brief Gets the frequency of this KmerFreq object
      * Query method
      * @return The frequency of this KmerFreq object
      */
-    int getFrequency();
+    const int getFrequency() const;
 
     /**
      * @brief Sets the Kmer of this KmerFreq object.
@@ -70,7 +66,7 @@ public:
      * @return A string with the nucleotide and frequency of the kmer
      * in this object
      */
-    std::string toString();
+    std::string toString() const;
     
 private:
     Kmer _kmer; ///< the Kmer object

@@ -1,16 +1,12 @@
 /*
- * Metodología de la Programación: Kmer4
+ * Metodología de la Programación: Kmer2
  * Curso 2023/2024
  */
 
 /** 
  * @file Profile.h
- * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
- * @author Andrés Cano Utrera <acu@decsai.ugr.es>
- * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
- * @author Javier Martínez Baena <jbaena@ugr.es>
- * 
- * Created on 17 November 2023, 10:15
+ * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
+ * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
  */
 
 #ifndef PROFILE_H
@@ -31,59 +27,56 @@ public:
 
     /**
      * @brief Base constructor. It builds a Profile object with "unknown" as
-     * identifier, and an empty vector of pairs Kmer-frequency. The vector will
-     * have Kmer::INITIAL_CAPACITY as initial capacity.
+     * identifier, and an empty vector of pairs Kmer-frequency. 
      */
     Profile();
 
    
     /**
      * @brief It builds a Profile object with "unknown" as
-     * identifier, and a vector with a size of @p size pairs 
-     * Kmer-frequency. The vector will also have @p size as initial capacity.
-     * Each pair will be initialized as Kmer::MISSING_NUCLEOTIDE for the Kmer 
+     * identifier, and a vector with a size of @p size pairs Kmer-frequency. 
+     * Each pair will be initialized as Kmer::MISSING_NUCLEOTIDE for the Kmer
      * and 0 for the frequency.
      * @throw std::out_of_range Throws a std::out_of_range exception if
-     * @p size <0
-     * @param size The size for the vector of kmers in this Profile.
+     * @p size<0 or @p size > @p DIM_VECTOR_KMER_FREQ
+     * @param size The size for the vector of kmers in this Profile. 
      * Input parameter
      */
-    Profile(int size);
+    Profile(const int size);
 
     /**
      * @brief Copy constructor
      * @param orig the Profile object used as source for the copy. Input 
      * parameter
      */
-    Profile(Profile orig);
+    Profile(const Profile &orig);
 
     /**
      * @brief Destructor
      */
     ~Profile();
-
-    /**
-     * @brief Overloading of the assignment operator for Profile class.
+    
+    /* @brief Overloading of the assignment operator for Profile class.
      * Modifier method
      * @param orig the Profile object used as source for the assignment. Input
      * parameter
      * @return A reference to this object
      */
-    Profile operator=(Profile orig);
+    Profile& operator=(const Profile &orig);
 
     /**
      * @brief Returns the identifier of this profile object.
      * Query method
      * @return A const reference to the identifier of this profile object
      */
-    std::string getProfileId();
+    const std::string &getProfileId() const;
 
     /**
      * @brief Sets a new identifier for this profile object.
      * Modifier method
      * @param id The new identifier. Input parameter
      */
-    void setProfileId(std::string id);
+    void setProfileId(const std::string id);
 
 
     /**
@@ -95,7 +88,7 @@ public:
      * given index is not valid
      * @return A const reference to the KmerFreq at the given position
      */
-    KmerFreq at(int index); 
+    const KmerFreq &at(const int index) const; 
 
     /**
      * @brief Gets a reference to the KmerFreq at the given position of the 
@@ -106,53 +99,21 @@ public:
      * given index is not valid
      * @return A reference to the KmerFreq at the given position
      */
-    KmerFreq at(int index); 
+    KmerFreq &at(const int index); //Para la sobrecarga de operadores
 
     /**
      * @brief Gets the number of KmerFreq objects.
      * Query method
      * @return The number of KmerFreq objects 
      */
-    int getSize();
+    const int getSize() const;
     
     /**
      * @brief Gets the capacity of the vector of KmerFreq objects.
      * Query method
      * @return The capacity of the vector of KmerFreq objects
      */
-    int getCapacity();
-    
-    /**
-     * @brief Gets the distance between this Profile object (\f$P_1\f$) and 
-     * the given argument object @p otherProfile (\f$P_2\f$).
-     * The distance between two Profiles \f$P_1\f$ and \f$P_2\f$ is 
-     * calculated in the following way:
-     * 
-     * \f$d = \frac{ \sum_{kmer_i(P_1)} | rank_{kmer_i(P_1)}^{P_1} - 
-     * rank_{kmer_i(P_1)}^{P_2} | }{size(P_1) * size(P_2) }\f$, 
-     * 
-     * where \f$kmer_i(p_j)\f$ is the kmer \f$i\f$ of the Profile \f$p_j, 
-     * j \in \{1, 2\}\f$ and \f$rank_{kmer_i(p_j)}^{p_k}\f$ is the ranking
-     * of the kmer \f$i\f$ of the Profile \f$p_j, j \in \{1, 2\}\f$ in the
-     * Profile \f$p_k\f$. 
-     * 
-     * The rank of a kmer is the position in which it
-     * appears in the list of KmerFreq. We consider 0 as the 
-     * first position (rank equals to 0). When calculating 
-     * \f$rank_{kmer_i(P_1)}^{P_2}\f$, if the kmer \f$kmer_i(P_1)\f$ 
-     * does not appears in the Profile \f$P_2\f$ we consider that the rank
-     * is equals to the size of Profile \f$P_2\f$. 
-     * Query method
-     * @param otherProfile A Profile object. Input parameter
-     * @pre The list of kmers of this and otherProfile should be ordered in 
-     * decreasing order of frequency. This is not checked in this method.
-     * @throw Throws a std::invalid_argument exception if the implicit object
-     * (*this) or the argument Profile object are empty, that is, they do not 
-     * have any kmer.
-     * @return The distance between this Profile object and the given 
-     * argument @p otherProfile.
-     */
-    double getDistance(Profile otherProfile);
+    const int getCapacity() const;
     
     /**
      * @brief Searchs the given kmer in the list of kmers in this
@@ -167,8 +128,8 @@ public:
      * @return If found, it returns the position where the kmer 
      * was found. If not, it returns -1
      */
-    int findKmer(Kmer kmer, int initialPos, int finalPos);
-
+    const int findKmer(const Kmer kmer, const int initialPos, const int finalPos) const;
+    
     /**
      * @brief Searchs the given kmer in the list of kmers in this
      * Profile. If found, it returns the position where it was found. If not,
@@ -179,7 +140,7 @@ public:
      * @return If found, it returns the position where the kmer 
      * was found. If not, it returns -1
      */
-    int findKmer(Kmer kmer);
+    const int findKmer(const Kmer kmer) const;
 
     /**
      * @brief Obtains a string with the following content:
@@ -191,7 +152,7 @@ public:
      * @return A string with the number of kmers and the list of pairs of
      * kmer-frequency in the object
      */
-    std::string toString();
+    const std::string toString() const;
 
     /**
      * @brief Sorts the vector of KmerFreq in decreasing order of frequency.
@@ -211,7 +172,7 @@ public:
      * if the given file cannot be opened or if an error occurs while writing
      * to the file
      */
-    void save(char fileName[]);
+    void save(const char fileName[]) const;
 
     /**
      * @brief Loads into this object the Profile object stored in the given 
@@ -221,14 +182,16 @@ public:
      * @param fileName A c-string with the name of the file where the Profile 
      * will be stored. Input parameter
      * @throw std::out_of_range Throws a std::out_of_range exception if the 
-     * number of kmers in the given file is negative.
+     * number of kmers in the given file, cannot be allocated in this Profile
+     * because it exceeds the maximum capacity or if the number of kmers read 
+     * from the given file is negative.
      * @throw std::ios_base::failure Throws a std::ios_base::failure exception 
      * if the given file cannot be opened or if an error occurs while reading
      * from the file
      * @throw throw std::invalid_argument Throws a std::invalid_argument if
      * an invalid magic string is found in the given file
      */
-    void load(char fileName[]);
+    void load(const char fileName[]);
      
     /**
      * @brief Appends a copy of the given KmerFreq to this Profile object.
@@ -237,9 +200,14 @@ public:
      * given KmerFreq object is appended to the end of the list of
      * KmerFreq objects in this Profile.
      * Modifier method
+     * @thow std::out_of_range Throws a std::out_of_range exception in case
+     * that a new element must be appended to the end of the array and the
+     * number of elements in the array of KmerFreq is equals to the capacity
+     * of that array. In that case, the array is full, and no more elements
+     * can be appended to the array.
      * @param kmerFreq The KmerFreq to append to this object. Input paramether
      */
-    void append(KmerFreq kmerFreq);
+    void append(const KmerFreq &kmerFreq);
     
     /**
      * @brief Normalizes the Kmers of the vector of KmerFreq in this object. 
@@ -275,7 +243,7 @@ _G 5
      * @param validNucleotides a string with the list of characters (nucleotides) 
      * that should be considered as valid. Input parameter
      */
-    void normalize(std::string validNucleotides);
+    void normalize(const std::string validNucleotides);
 
     /**
      * @brief Deletes the KmerFreq object from the vector of KmerFreq in this
@@ -286,7 +254,7 @@ _G 5
      * @throw std::out_of_range Throws an std::out_of_range exception if @p pos 
      * is not in the range from 0 to size()-1 (both included).
      */
-    void deletePos(int pos);
+    void deletePos(const int pos);
 
     /**
      * @brief Deletes the KmerFreq objects from the vector of KmerFreq in this
@@ -306,7 +274,7 @@ _G 5
      * deleted. This parameter has zero as default value.
      * Input parameter
      */
-    void zip(bool deleteMissing=false, int lowerBound = 0);
+    void zip(bool deleteMissing, const int lowerBound);
     
     /**
      * @brief Appends to this Profile object, the list of pairs  
@@ -317,7 +285,20 @@ _G 5
      * Modifier method
      * @param profile A Profile object. Input parameter
      */
-    void join(Profile profile);
+    void join(const Profile& profile);
+    
+    
+/**
+ * 
+ * 
+ * 
+ * 
+   **/
+    const double getDistance (const Profile otherProfile) const;
+    
+    //Método para reservar memoria:
+    void allocate (const int capacity);
+    void reallocate(const int capacity);
     
 private:
     std::string _profileId; ///< Profile identifier
