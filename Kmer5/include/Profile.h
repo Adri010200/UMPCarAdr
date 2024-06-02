@@ -300,6 +300,12 @@ _G 5
     void allocate (const int capacity);
     void reallocate(const int capacity);
     
+    
+    KmerFreq& operator[](int id);
+    const KmerFreq& operator[](int id) const;
+    Profile operator+=(KmerFreq &k);
+    Profile operator+=(Profile &p);
+    
 private:
     std::string _profileId; ///< Profile identifier
     KmerFreq* _vectorKmerFreq; ///< Dynamic array of KmerFreq
@@ -311,5 +317,8 @@ private:
 
     static const std::string MAGIC_STRING_T; ///< A const string with the magic string for text files
 };
+
+   std::ostream& operator<<(std::ostream& os,const Profile &);
+   std::istream& operator>>(std::istream& is, Profile &);
 
 #endif /* PROFILE_H */

@@ -69,7 +69,12 @@ TA 1
  */
 int main(int argc, char *argv[]) {   
     // Process the main() arguments
-    
+    Profile* parray = new Profile[argc];
+    Profile aux();
+    for(int i = 0; i<argc; i++){
+        aux.load(argv[i+1]);
+        parray[i] = aux;
+    }
     // Loop to calculate the kmer frecuencies of the input genome files using 
     // a KmerCounter object
     

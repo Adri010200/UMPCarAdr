@@ -126,3 +126,54 @@ void Kmer::toLower(){
 void Kmer::toUpper(){
     ToUpper(*this);
 }
+std::ostream& operator<<(std::ostream& os, Kmer kmer){
+    os<<kmer.toString();
+    return os;
+}
+std::istream& operator>>(std::istream& is, Kmer &kmer){
+    string s;
+    is>>s;
+    Kmer aux(s);
+    kmer = aux;
+    return is;
+}
+
+bool Kmer::operator<(const Kmer& k){
+    if(this->toString() < k.toString())
+    { return true; }
+    else
+    { return false; }
+}
+bool Kmer::operator>(const Kmer& k){
+    if(this->toString() > k.toString())
+    { return true; }
+    else
+    { return false; }
+}
+bool Kmer::operator<=(const Kmer& k){
+    if(*this<k || *this == k)
+    { return true; }
+    else
+    { return false; }
+}
+bool Kmer::operator>=(const Kmer& k){
+    if(*this >k || *this == k)
+    { return true; }
+    else
+    { return false; }
+}
+bool Kmer::operator!=(const Kmer& k){
+    return !(*this == k);
+}
+bool Kmer::operator==(const Kmer& k){
+    if(this->toString() == k.toString())
+    { return true; }
+    else
+    { return false; }
+}
+char& Kmer::operator[](int id){
+    return at(id);
+}
+const char& Kmer::operator[](int id) const{
+    return at(id);
+}

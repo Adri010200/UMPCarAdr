@@ -140,6 +140,15 @@ public:
          const std::string& complementaryNucleotides) const;
 
     
+    //Sobrecarga de operadores:
+    bool operator<(const Kmer&);
+    bool operator>(const Kmer&);
+    bool operator<=(const Kmer&);
+    bool operator>=(const Kmer&);
+    bool operator!=(const Kmer&);
+    bool operator==(const Kmer&);
+    char& operator[](int id);
+    const char& operator[](int id) const;
 private:
     /**
      * A string with a list of characters representing the nucleotides in 
@@ -176,5 +185,5 @@ bool IsValidNucleotide(char nucleotide, const std::string& validNucleotides);
    void ToUpper(Kmer& kmer);
 
    std::ostream& operator<<(std::ostream& os, Kmer kmer);
-   std::istream& operator>>(std::istream& is, Kmer kmer);
+   std::istream& operator>>(std::istream& is, Kmer &kmer);
 #endif /* KMER_H */

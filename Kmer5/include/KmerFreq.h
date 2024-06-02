@@ -68,9 +68,21 @@ public:
      */
     std::string toString() const;
     
+    //Sobrecarga de operadores:
+    bool operator<(const KmerFreq&);
+    bool operator>(const KmerFreq&);
+    bool operator<=(const KmerFreq&);
+    bool operator>=(const KmerFreq&);
+    bool operator!=(const KmerFreq&);
+    bool operator==(const KmerFreq&);
+    
 private:
     Kmer _kmer; ///< the Kmer object
     int _frequency; ///< the frequency
 }; // end class KmerFreq
+
+
+   std::ostream& operator<<(std::ostream& os,const KmerFreq);
+   std::istream& operator>>(std::istream& is, KmerFreq &);
 
 #endif /* KMER_FREQ_H */

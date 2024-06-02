@@ -74,15 +74,15 @@ public:
      * @param validNucleotides The set of nucleotides (characters) that are 
      * considered as part of a kmer. Input parameter
      */
-    KmerCounter(int k=5, 
-       std::string validNucleotides = DEFAULT_VALID_NUCLEOTIDES);
+    KmerCounter(const int k=5, 
+       const std::string validNucleotides = DEFAULT_VALID_NUCLEOTIDES);
 
     /**
      * @brief Copy constructor
      * @param orig the KmerCounter object used as source for the copy. 
      * Input parameter
      */
-    KmerCounter(KmerCounter orig);
+    KmerCounter(const KmerCounter& orig);
 
     /**
      * @brief Destructor
@@ -97,14 +97,14 @@ public:
      * Query method
      * @return The number of nucleotides that can be part of a kmer
      */
-    int getNumNucleotides();
+    const int getNumNucleotides() const;
     
     /**
      * @brief Returns the number of nucleotides in each kmer
      * Query method
      * @return The number of nucleotides in each kmer
      */
-    int getK();
+    const int getK() const;
     
     /**
      * @brief Returns the number of different kmers that can be built using
@@ -113,7 +113,7 @@ public:
      * @return The number of different kmers that can be built using
      * @p _k nucleotides 
      */
-    int getNumKmers();
+    const int getNumKmers() const;
     
 
     /**
@@ -121,7 +121,7 @@ public:
      * Query method
      * @return the number of kmers with a frequency greater than 0
      */
-    int getNumberActiveKmers();
+    const int getNumberActiveKmers(int &aux) const;
     
     /**
      * @brief Obtains a string with the following content:
@@ -148,7 +148,7 @@ public:
      * @param frequency The quantity that will be added to the current 
      * frequency. Input parameter
      */
-    void increaseFrequency(Kmer kmer, int frequency = 1);
+    void increaseFrequency(const Kmer kmer,const int frequency = 1);
 
     /**
      * @brief Overloading of the assignment operator.
@@ -229,14 +229,14 @@ private:
      * Query method
      * @return The numbers of rows of the matrix in this object
      */
-    int getNumRows();
+    const int getNumRows() const;
     
     /**
      * @brief Returns the numbers of columns of the matrix in this object.
      * Query method
      * @return The numbers of columns of the matrix in this object
      */
-    int getNumCols();
+    const int getNumCols() const;
     
     /**
      * Returns the index (a row or a column in the frequency matrix) 
@@ -277,7 +277,7 @@ private:
      * @param column The column in the frequency matrix corresponding to 
      * Kmer @p kmer. Output parameter
      */
-    void getRowColumn(Kmer kmer, int row, int column);
+    void getRowColumn(const Kmer kmer, int row, int column);
 
     /**
      * @brief Returns the Kmer that is defined by the provided row and column 

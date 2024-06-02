@@ -26,7 +26,7 @@ Profile::Profile(const int size){
         throw out_of_range("En el constructor, el tamaño " + to_string(_size) +
                 "debe ser mayor o igual a 0");
     }
-    allocate(size);    
+    allocate(size);
  }
 Profile::Profile(const Profile &orig):_profileId(orig.getProfileId()), _size(orig.getSize()),_capacity(orig.getCapacity()) {
     *this = orig;
@@ -40,9 +40,10 @@ Profile& Profile::operator=(const Profile &orig){
         delete[] this->_vectorKmerFreq;
         this->_size = orig.getSize();
         this->_capacity = orig.getCapacity();
+        this->setProfileId(orig.getProfileId());
         this->_vectorKmerFreq = new KmerFreq[orig.getCapacity()];
         for(int i = 0; i<orig.getSize(); i++){
-            _vectorKmerFreq[i] = orig.at(i); //no me funciona
+            _vectorKmerFreq[i] = orig.at(i); 
         }
     }
     return *this;
@@ -104,7 +105,7 @@ const int Profile::findKmer(const Kmer kmer) const{
     return pos;
 }
 const string Profile::toString() const{
-    string s = "";
+    string s;
     s += this->getProfileId() + "\n";
     s += to_string(this->getSize());
     for(int i = 0; i < getSize(); i++){
@@ -168,6 +169,7 @@ void Profile::load(const char fileName[]){
     }
     if(num > this->getCapacity()){
         //Aumentar la capacidad de this
+        reallocate(num);
     }
     _size = num;
     KmerFreq kf;
@@ -182,6 +184,8 @@ void Profile::load(const char fileName[]){
 }
 void Profile::append(const KmerFreq &kmerFreq){ 
     bool apears = false;
+    
+    //Podríamos usar el método Find_First_of
     for(int i =0; i< _size; i++){
         if(_vectorKmerFreq[i].getKmer().toString() == kmerFreq.getKmer().toString()){
             apears = true;
@@ -191,7 +195,7 @@ void Profile::append(const KmerFreq &kmerFreq){
     }
     if(!apears && this->getCapacity() == this->getSize()+1){
         //Aumentar la capacidad y el size
-        //reservaMemoria(this->getSize()+1);
+        reallocate(this->getCapacity()+1);
     }
     else if(!apears){
         _vectorKmerFreq[_size++] = kmerFreq;
@@ -284,4 +288,35 @@ void Profile::reallocate(const int capacity){
     _capacity = capacity;
     _vectorKmerFreq = v;
     //No hay que modificar el size, no se añaden ni eliminan KmerFreqs
+}
+
+KmerFreq& Profile::operator[](int id){
+    return _vectorKmerFreq[id];
+}
+const KmerFreq& Profile::operator[](int id) const{
+    return _vectorKmerFreq[id];
+}
+Profile Profile::operator+=(KmerFreq k){
+    append(k);
+    return this;
+}
+Profile Profile::operator+=(Profile &p){
+    this->join(p);
+    return this;
+}
+std::ostream& operator<<(std::ostream& os,const Profile &p){
+    os<<p.toString();
+    return os;
+}
+std::istream& operator>>(std::istream& is, Profile &p){
+    string id;
+    int size;
+    KmerFreq k;
+    is>>id>>size;
+    p.setProfileId(id);
+    for(int i = 0; i<size; i++){
+        is>>k;
+        p.at(i) = k;
+    }
+    return is;
 }
