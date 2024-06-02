@@ -1,5 +1,5 @@
 /*
- * Metodología de la Programación: Kmer2
+ * Metodología de la Programación: Kmer5
  * Curso 2023/2024
  */
 
@@ -296,13 +296,13 @@ KmerFreq& Profile::operator[](int id){
 const KmerFreq& Profile::operator[](int id) const{
     return _vectorKmerFreq[id];
 }
-Profile Profile::operator+=(KmerFreq k){
+Profile Profile::operator+=(KmerFreq &k){
     append(k);
-    return this;
+    return *this;
 }
 Profile Profile::operator+=(Profile &p){
     this->join(p);
-    return this;
+    return *this;
 }
 std::ostream& operator<<(std::ostream& os,const Profile &p){
     os<<p.toString();

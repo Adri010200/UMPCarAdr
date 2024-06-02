@@ -47,34 +47,34 @@ std::istream& operator>>(std::istream& is, KmerFreq &k){
     return is;
 }
 
-bool KmerFreq::operator<(const KmerFreq& k){
-    if(this->getFrequency < k.getFrequency())
+bool KmerFreq::operator<(const KmerFreq& k) const{
+    if(this->getFrequency() < k.getFrequency())
     { return true; }
     else
     { return false; }
 }
-bool KmerFreq::operator>(const KmerFreq& k){
-    if(this->getFrequency > k.getFrequency() || (this->getFrequency == k.getFrequency() && this->getKmer() < k.getKmer()))
+bool KmerFreq::operator>(const KmerFreq& k) const{
+    if(this->getFrequency() > k.getFrequency() || (this->getFrequency() == k.getFrequency() && this->getKmer() < k.getKmer()))
     { return true; }
     else
     { return false; }
 }
-bool KmerFreq::operator<=(const KmerFreq& k){
-    if(this<k || this == k)
+bool KmerFreq::operator<=(const KmerFreq& k) const{
+    if(*this<k || *this == k)
     { return true; }
     else
     { return false; }
 }
-bool KmerFreq::operator>=(const KmerFreq& k){
-    if(this>k || this == k)
+bool KmerFreq::operator>=(const KmerFreq& k) const{
+    if(*this>k || *this == k)
     { return true; }
     else
     { return false; }
 }
-bool KmerFreq::operator!=(const KmerFreq& k){
-    return !(this == k);
+bool KmerFreq::operator!=(const KmerFreq& k) const{
+    return !(*this == k);
 }
-bool KmerFreq::operator==(const KmerFreq& k){
+bool KmerFreq::operator==(const KmerFreq& k) const{
     if(this->getFrequency() == k.getFrequency() && this->getKmer() == k.getKmer())
     { return true; } 
     else

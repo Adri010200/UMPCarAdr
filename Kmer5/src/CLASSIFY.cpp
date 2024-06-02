@@ -4,14 +4,11 @@
  */
 
 /** 
- * @file CLASSIFY.cpp
- * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
- * @author Andrés Cano Utrera <acu@decsai.ugr.es>
- * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
- * @author Javier Martínez Baena <jbaena@ugr.es>
- * 
- * Created on 22 December 2023, 10:00
+ * @file Profile.h
+ * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
+ * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
  */
+
 
 /**
  * Shows help about the use of this program in the given output stream
@@ -77,20 +74,40 @@ Final decision: homo sapiens with a distance of 0.0557804
 int main(int argc, char *argv[]) {
     // Process the main() arguments
     
+    Profile p;
+    p.load(argv[1]);
+    string* sarray = new string[argc-1];
+    for(int i = 0; i<argc-1; i++){
+        sarray[i] = argv[i+1];
+    }
+    
     // Calculate the kmer frecuencies of the input genome file using 
     //    a KmerCounter object
     
+    KmerCounter kc;
+    for(int i = 0; i<argc-1; i++){
+        kc.calculateFrequencies(sarray[i]);
+    }
+    
     // Obtain a Profile object for the input genome from the KmerCounter object
-    
+    Profile p2 = kc.toProfile();
     // Zip the for the input genome Profile object
-    
+    p2.zip();
     // Sort the for the input genome Profile object
-    
+    p2.sort();
     // Use a loop to print the distance from the input genome to 
     //   each one of the provided profile models
-    
+    Profile* aux = new Profile[argc-1];
+    for(int i = 0; i<argc-1; i++)
+        aux[i].load(sarray[i]);
+    double min = 1;
+    for(int i = 0; i<argc-2; i++){
+        cout<<"Distancia entre "<<argv[1]<<" y "<< argv[i+1]<<": "<<p.getDistance(aux[i])<<endl;
+        if(p.getDistance(aux[i])<min)
+            min = p.getDistance(aux[i]);
+    }
     // Print the identifier and distance to the closest profile
-    
+    cout<<"Mínimo: "<<min;
     
  
 }

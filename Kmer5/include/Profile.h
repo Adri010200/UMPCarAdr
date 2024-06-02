@@ -1,5 +1,5 @@
 /*
- * Metodología de la Programación: Kmer2
+ * Metodología de la Programación: Kmer5
  * Curso 2023/2024
  */
 

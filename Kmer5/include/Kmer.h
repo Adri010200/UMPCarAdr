@@ -141,12 +141,12 @@ public:
 
     
     //Sobrecarga de operadores:
-    bool operator<(const Kmer&);
-    bool operator>(const Kmer&);
-    bool operator<=(const Kmer&);
-    bool operator>=(const Kmer&);
-    bool operator!=(const Kmer&);
-    bool operator==(const Kmer&);
+    bool operator<(const Kmer&) const;
+    bool operator>(const Kmer&) const;
+    bool operator<=(const Kmer&) const;
+    bool operator>=(const Kmer&) const;
+    bool operator!=(const Kmer&) const;
+    bool operator==(const Kmer&) const;
     char& operator[](int id);
     const char& operator[](int id) const;
 private:

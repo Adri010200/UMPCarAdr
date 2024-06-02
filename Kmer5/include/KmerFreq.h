@@ -69,12 +69,13 @@ public:
     std::string toString() const;
     
     //Sobrecarga de operadores:
-    bool operator<(const KmerFreq&);
-    bool operator>(const KmerFreq&);
-    bool operator<=(const KmerFreq&);
-    bool operator>=(const KmerFreq&);
-    bool operator!=(const KmerFreq&);
-    bool operator==(const KmerFreq&);
+    bool operator<(const KmerFreq&) const;
+    bool operator>(const KmerFreq&) const;
+    bool operator<=(const KmerFreq&) const;
+    bool operator>=(const KmerFreq&) const;
+    bool operator!=(const KmerFreq&) const;
+    bool operator==(const KmerFreq&) const;
+    
     
 private:
     Kmer _kmer; ///< the Kmer object

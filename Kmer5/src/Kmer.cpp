@@ -138,34 +138,34 @@ std::istream& operator>>(std::istream& is, Kmer &kmer){
     return is;
 }
 
-bool Kmer::operator<(const Kmer& k){
+bool Kmer::operator<(const Kmer& k) const{
     if(this->toString() < k.toString())
     { return true; }
     else
     { return false; }
 }
-bool Kmer::operator>(const Kmer& k){
+bool Kmer::operator>(const Kmer& k) const{
     if(this->toString() > k.toString())
     { return true; }
     else
     { return false; }
 }
-bool Kmer::operator<=(const Kmer& k){
+bool Kmer::operator<=(const Kmer& k) const{
     if(*this<k || *this == k)
     { return true; }
     else
     { return false; }
 }
-bool Kmer::operator>=(const Kmer& k){
+bool Kmer::operator>=(const Kmer& k) const{
     if(*this >k || *this == k)
     { return true; }
     else
     { return false; }
 }
-bool Kmer::operator!=(const Kmer& k){
+bool Kmer::operator!=(const Kmer& k) const{
     return !(*this == k);
 }
-bool Kmer::operator==(const Kmer& k){
+bool Kmer::operator==(const Kmer& k) const{
     if(this->toString() == k.toString())
     { return true; }
     else

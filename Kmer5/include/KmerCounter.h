@@ -3,15 +3,12 @@
  * Curso 2023/2024
  */
 
-/* 
- * @file:   KmerCounter.h
- * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
- * @author Andrés Cano Utrera <acu@decsai.ugr.es>
- * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
- * @author Javier Martínez Baena <jbaena@ugr.es>
- *
- * Created on 7 November 2023, 14:00
+/** 
+ * @file Profile.h
+ * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
+ * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
  */
+
 
 #ifndef KMER_COUNTER_H
 #define KMER_COUNTER_H
@@ -104,7 +101,7 @@ public:
      * Query method
      * @return The number of nucleotides in each kmer
      */
-    const int getK() const;
+    int getK() const;
     
     /**
      * @brief Returns the number of different kmers that can be built using
@@ -121,7 +118,7 @@ public:
      * Query method
      * @return the number of kmers with a frequency greater than 0
      */
-    const int getNumberActiveKmers(int &aux) const;
+    const int getNumberActiveKmers() const;
     
     /**
      * @brief Obtains a string with the following content:
@@ -133,7 +130,7 @@ public:
      * Query method
      * @return A string with the content of this object
      */
-    std::string toString();
+    std::string toString() const;
 
     /**
      * @brief Increases the current frequency of the given kmer using the value 
@@ -157,7 +154,7 @@ public:
      * Input parameter
      * @return A reference to this object
      */
-    KmerCounter operator=(KmerCounter orig);
+    KmerCounter& operator=(const KmerCounter& orig);
 
     /**
      * @brief Overloading of the operator +=. It increases the current 
@@ -171,7 +168,7 @@ public:
      * kmers).
      * @return A reference to this object
      */
-    KmerCounter operator+=(KmerCounter kc);
+    KmerCounter& operator+=(const KmerCounter& kc);
 
     /**
      * @brief Reads the given text file and calculates the frequencies of each 
@@ -186,7 +183,7 @@ public:
      * @throw std::ios_base::failure Throws a std::ios_base::failure if the
      * given file cannot be opened
      */
-    void calculateFrequencies(char* fileName);
+    void calculateFrequencies(const char* fileName);
 
     /**
      * @brief Builds a Profile object from this KmerCounter object. The 
@@ -204,8 +201,9 @@ public:
      * 
      * @return A Profile object from this KmerCounter object
      */
-    Profile toProfile();
+    Profile toProfile() const;
 
+    void allocate();
 private:
     int** _frequency; ///< 2D matrix with the frequency of each kmer
     
@@ -277,7 +275,7 @@ private:
      * @param column The column in the frequency matrix corresponding to 
      * Kmer @p kmer. Output parameter
      */
-    void getRowColumn(const Kmer kmer, int row, int column);
+    void getRowColumn(const Kmer kmer, int& row, int& column) const;
 
     /**
      * @brief Returns the Kmer that is defined by the provided row and column 
@@ -291,7 +289,7 @@ private:
      * of the correct bounds
      * @return the Kmer that is defined by the provided row and column 
      */
-    Kmer getKmer(int row, int column);
+    const Kmer getKmer(const int row,const int column) const;
     
     /**
      * @brief Sets the frequency of each kmer to 0, that is, it fills with 0 the 
@@ -308,7 +306,7 @@ private:
      * @param column Column of the element. Input parameter
      * @return A const reference to the element at the given position
      */
-    int operator()(int row, int column);
+    const int operator()(int row, int column) const;
 
     /**
      * @brief Overloading of the () operator to access to the element at a 

@@ -4,14 +4,11 @@
  */
 
 /** 
- * @file LEARN.cpp
- * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
- * @author Andrés Cano Utrera <acu@decsai.ugr.es>
- * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
- * @author Javier Martínez Baena <jbaena@ugr.es>
- * 
- * Created on 22 December 2023, 10:00
+ * @file Profile.h
+ * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
+ * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
  */
+
 
 
 /**
@@ -69,21 +66,77 @@ TA 1
  */
 int main(int argc, char *argv[]) {   
     // Process the main() arguments
-    Profile* parray = new Profile[argc];
-    Profile aux();
-    for(int i = 0; i<argc; i++){
-        aux.load(argv[i+1]);
-        parray[i] = aux;
+    
+    string fprofile;
+    string n;
+    string outputfile;
+    int k;
+    int restantes;
+    int pos=1;
+    bool fin=false;
+    string* sarray;
+    while ((pos<argc) && (!fin)) {
+        if (argv[pos][0]=='-’)
+            if (strlen(argv[pos])==2) { // Se necesita una letra
+                if (argv[pos][1]=='p' && (pos+1<argc)) {
+                    fprofile = argv[pos+1];//
+                    pos+=2;
+                }
+                else if(argv[pos][1] == 'k' && (pos+1<argc)){
+                    k = static_cast<int>(argv[pos+1]);
+                    pos+=2;
+                }
+                else if (argv[pos][1] == 'n' && (pos+1<argc)){
+                    n = argv[pos+1];
+                    pos +=2;
+                }
+                else if(argv[pos][1] == 'o' && (pos+1<argc)){
+                    outputfile = argv[pos+1];
+                    pos +=2;
+                }
+                // ...
+            } else {
+            // Error, se ha puesto solo ‘-’ 
+            fin=true;
+            }
+        else{
+        // Aquí comienza lista de ficheros de entrada. 
+            fin=true;
+            if(outputfile == ""){
+                outputfile = argv[pos];
+                pos++;
+            }
+            restantes = argc-pos;
+            sarray = new string[restantes];
+            for(int i = 0; i<restantes ; i++){
+                sarray[i] = argv[pos];
+                pos++;
+            }
+        }
     }
+    
     // Loop to calculate the kmer frecuencies of the input genome files using 
     // a KmerCounter object
-    
+    if(k != 0 && n != ""){
+        KmerCounter kc(k, n);
+    }
+    else{
+        KmerCounter kc;
+    }
+    for(int i = 0; i<restantes; i++){
+        kc.calculateFrequencies(sarray[i]);
+    }
     // Obtain a Profile object from the KmerCounter object
+    Profile p = kc.toProfile();
+    if(fprofile != ""){
+        p.setProfileId(fprofile);
+    }
     
     // Zip the Profile object
-    
+    p.zip();
     // Sort the Profile object
-    
+    p.sort();
     // Save the Profile object in the output file
+    p.save(outputfile);
 }
 

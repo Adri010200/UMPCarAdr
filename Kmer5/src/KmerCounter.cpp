@@ -4,14 +4,11 @@
  */
 
 /** 
- * @file KmerCounter.cpp
- * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
- * @author Andrés Cano Utrera <acu@decsai.ugr.es>
- * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
- * @author Javier Martínez Baena <jbaena@ugr.es>
- * 
- * Created on 22 December 2023, 10:00
+ * @file Profile.h
+ * @author Carlos Manuel Pérez Molina <cperezmolina@correo.ugr.es>
+ * @author Adrián Ros Moya <adri0102rm@correo.ugr.es>
  */
+
 
 #include "KmerCounter.h"
 #include <cmath>
@@ -64,21 +61,14 @@ string KmerCounter::getInvertedIndex(int index, int nCharacters) const {
     return result;
 }
 
-KmerCounter::KmerCounter(const int k=5, 
-       const std::string validNucleotides = DEFAULT_VALID_NUCLEOTIDES){
+KmerCounter::KmerCounter(const int k, 
+       const std::string validNucleotides){
     this->_k = k;
     this->_validNucleotides = validNucleotides;
     this->_allNucleotides = Kmer::MISSING_NUCLEOTIDE + validNucleotides;
-    int** _frequency = new int[k];
-    _frequency[0] = new int[k*k];
-    for(int i = 1; i<k; i++){
-        _frequency[i] = _frequency[i-1]+k;
-    }
-    for(int i = 0; i<k; i++){
-        for(int j = 0; j<k; j++){
-            _frequency[i][j] =0;
-        }
-    }
+    
+    allocate();
+    initFrequencies();
 }
 KmerCounter::KmerCounter(const KmerCounter &orig){
     *this = orig;
@@ -90,36 +80,116 @@ KmerCounter::~KmerCounter(){
 const int KmerCounter::getNumNucleotides() const{
     return _allNucleotides.size();
 }
-const int KmerCounter::getK() const{
+int KmerCounter::getK() const{
     return _k;
 }
 const int KmerCounter::getNumKmers() const{
     return pow(getNumNucleotides(),getK());
 }
-const int KmerCounter::getNumberActiveKmers(int &aux) const{
+const int KmerCounter::getNumberActiveKmers() const{
+    int aux;
     for(int i =0; i<getK(); i++){
-        for(int j= 0 0; j<getK(); j++){
+        for(int j= 0; j<getK(); j++){
             if(_frequency[i][j] > 0)
                 aux++;
         }
     }
     return aux;
 }
-void KmerCounter::increaseFrequency(const Kmer kmer,const int frequency = 1){
-    
+void KmerCounter::increaseFrequency(const Kmer kmer,const int frequency){
+    int auxrow, auxcol;
+    getRowColumn(kmer, auxrow, auxcol);
+    _frequency[auxrow][auxcol] += frequency;
 }
 const int KmerCounter::getNumRows() const{
-    return pow(getNumNucleotides(),(static_cast<float>(getK()+1))/2);
+    if(getK()%2 != 0)
+        return pow(getNumNucleotides(),(getK()+1)/2);
+    else
+        return pow(getNumNucleotides(),getK()/2);
 }
 const int KmerCounter::getNumCols() const{
-    return pow(getNumNucleotides(),getK()-((static_cast<float>(getK()+1))/2));
+    if(getK()%2 != 0)
+        return pow(getNumNucleotides(),(getK()-1)/2);
+    else
+        return pow(getNumNucleotides(),getK()/2);
 }
-void KmerCounter::getRowColumn(const Kmer kmer, int row, int column){
+void KmerCounter::getRowColumn(const Kmer kmer, int& row, int& column) const{
     row = column = 0;
     int pos = getIndex(kmer.toString());
-    while(pos> getK()){
+    while(pos> getNumCols()){
         column++;
-        pos-= getNumNucleotides();
+        pos-= getNumCols();
     };
     row = pos;
+}
+KmerCounter& KmerCounter::operator=(const KmerCounter& orig){
+    if(this != &orig){
+        delete[] this->_frequency[0];
+        delete[] _frequency;
+        _k= orig.getK();
+        _validNucleotides = orig._validNucleotides;
+        _allNucleotides = orig._allNucleotides;
+        allocate();
+        for(int i = 0; i<getNumRows(); i++){
+            for(int j = 0; j<getNumCols(); j++){
+                _frequency[i][j] = orig._frequency[i][j];
+            }
+        }
+    }
+    return *this;
+}
+void KmerCounter::allocate(){
+    int** _frequency = new int*[getNumRows()];
+    _frequency[0] = new int[getNumKmers()];
+    for(int i = 1; i<getNumRows(); i++){
+        _frequency[i] = _frequency[i-1] + getNumCols();
+    }
+}
+KmerCounter& KmerCounter::operator+=(const KmerCounter& kc){
+    for(int i = 0; i<getNumRows(); i++){
+        for(int j = 0; j<getNumCols(); j++){
+            _frequency[i][j] += kc(i,j);
+        }
+    }
+}
+const Kmer KmerCounter::getKmer(const int row,const int column) const{
+    int index = row*getNumCols() + column;
+    string s = getInvertedIndex(index,getK());
+    return Kmer(s);
+}
+void KmerCounter::initFrequencies(){
+    for(int i = 0; i<getNumRows(); i++){
+        for(int j = 0; j<getNumCols(); j++){
+            _frequency[i][j] =0;
+        }
+    }
+}
+const int KmerCounter::operator()(int row, int column) const{
+    return _frequency[row][column];
+}
+int KmerCounter::operator()(int row, int column){
+    return _frequency[row][column];
+}
+Profile KmerCounter::toProfile() const{
+    Profile p;
+    KmerFreq aux;
+    for(int i = 0; i<getNumRows(); i++){
+        for(int j = 0; j<getNumCols(); j++){
+            if((i,j) > 0){
+                aux.setFrequency((i,j));
+                aux.setKmer(getKmer(i,j));
+                p.append(aux);
+            }
+        }
+    }
+    return p;
+}
+void KmerCounter::calculateFrequencies(const char* fileName){
+    Profile p;
+    p.load(fileName);
+    p.normalize(KmerCounter::DEFAULT_VALID_NUCLEOTIDES);
+    initFrequencies();
+    for(int i = 0; i<p.getSize(); i++){
+        increaseFrequency(p.at(i).getKmer(), p.at(i).getFrequency());
+    }
 }
