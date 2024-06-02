@@ -64,6 +64,11 @@ TA 1
  * @param argv The vector of command line parameters (cstrings)
  * @return 0 If there is no error; a value > 0 if error
  */
+using namespace std;
+#include <string>
+#include<cstring>
+#include<cstdlib>
+
 int main(int argc, char *argv[]) {   
     // Process the main() arguments
     
@@ -76,14 +81,14 @@ int main(int argc, char *argv[]) {
     bool fin=false;
     string* sarray;
     while ((pos<argc) && (!fin)) {
-        if (argv[pos][0]=='-’)
+        if (argv[pos][0]=='-')
             if (strlen(argv[pos])==2) { // Se necesita una letra
                 if (argv[pos][1]=='p' && (pos+1<argc)) {
                     fprofile = argv[pos+1];//
                     pos+=2;
                 }
                 else if(argv[pos][1] == 'k' && (pos+1<argc)){
-                    k = static_cast<int>(argv[pos+1]);
+                    k = atoi(argv[pos+1]);
                     pos+=2;
                 }
                 else if (argv[pos][1] == 'n' && (pos+1<argc)){
@@ -109,7 +114,7 @@ int main(int argc, char *argv[]) {
             restantes = argc-pos;
             sarray = new string[restantes];
             for(int i = 0; i<restantes ; i++){
-                sarray[i] = argv[pos];
+                sarray[i] = string(argv[pos]);
                 pos++;
             }
         }
@@ -117,14 +122,13 @@ int main(int argc, char *argv[]) {
     
     // Loop to calculate the kmer frecuencies of the input genome files using 
     // a KmerCounter object
+    KmerCounter kc;
     if(k != 0 && n != ""){
-        KmerCounter kc(k, n);
-    }
-    else{
-        KmerCounter kc;
+        KmerCounter kc2(k, n);
+        kc = kc2;
     }
     for(int i = 0; i<restantes; i++){
-        kc.calculateFrequencies(sarray[i]);
+        kc.calculateFrequencies(sarray[i].c_str());
     }
     // Obtain a Profile object from the KmerCounter object
     Profile p = kc.toProfile();
@@ -137,6 +141,6 @@ int main(int argc, char *argv[]) {
     // Sort the Profile object
     p.sort();
     // Save the Profile object in the output file
-    p.save(outputfile);
+    p.save(outputfile.c_str());
 }
 
